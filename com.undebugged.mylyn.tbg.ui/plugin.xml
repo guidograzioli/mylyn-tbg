@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.repositories">
+      <connectorCore
+            class="com.undebugged.mylyn.tbg.core.TBGRepositoryConnector"
+            name="The Bug Genie Connector Core">
+      </connectorCore>
+      <connectorUi
+            brandingIcon="icons/tbg-icon.gif"
+            class="com.undebugged.mylyn.tbg.ui.TBGConnectorUI"
+            name="The Bug Genie Connector UI">
+      </connectorUi>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.core.templates">
+      <repository
+            label="Repository Demo"
+            repositoryKind="TheBugGenie"
+            urlRepository="http://www.opensourcecms.com/demo/1/259/The+Bug+Genie">
+      </repository>
+   </extension>
+   <extension
+         point="org.eclipse.mylyn.tasks.ui.editors">
+      <pageFactory
+            class="com.undebugged.mylyn.tbg.ui.editor.TBGTaskEditorPageFactory"
+            id="com.undebugged.mylyn.tbg.ui.pageFactory">
+      </pageFactory>
+   </extension>
+
+</plugin>
