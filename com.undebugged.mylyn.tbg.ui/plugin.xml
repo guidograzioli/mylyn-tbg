@@ -10,7 +10,8 @@
       <connectorUi
             brandingIcon="icons/tbg-icon.gif"
             class="com.undebugged.mylyn.tbg.ui.TBGConnectorUI"
-            name="The Bug Genie Connector UI">
+            name="The Bug Genie Connector UI"
+            overlayIcon="icons/overlay-tbg.gif">
       </connectorUi>
    </extension>
    <extension

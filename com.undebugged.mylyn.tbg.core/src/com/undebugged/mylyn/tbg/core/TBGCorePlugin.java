@@ -1,31 +1,44 @@
 package com.undebugged.mylyn.tbg.core;
 
-import org.osgi.framework.BundleActivator;
+import org.eclipse.core.runtime.Plugin;
 import org.osgi.framework.BundleContext;
 
-public class TBGCorePlugin implements BundleActivator {
+public class TBGCorePlugin extends Plugin {
 
+	public static final String ID_PLUGIN = "org.eclipse.mylyn.trac.core"; //$NON-NLS-1$
 	public static final String CONNECTOR_KIND = "TheBugGenie";
-	private static BundleContext context;
-
-	static BundleContext getContext() {
-		return context;
+	private static TBGCorePlugin plugin;
+	private TBGRepositoryConnector connector;
+	
+	public TBGCorePlugin() {}
+	
+	public static TBGCorePlugin getDefault() {
+		return plugin;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext bundleContext) throws Exception {
-		TBGCorePlugin.context = bundleContext;
+	@Override
+	public void start(BundleContext context) throws Exception {
+		super.start(context);
+		plugin = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext bundleContext) throws Exception {
-		TBGCorePlugin.context = null;
+	@Override
+	public void stop(BundleContext context) throws Exception {
+		if (connector != null) {
+			connector.stop();
+			connector = null;
+		}
+
+		plugin = null;
+		super.stop(context);
 	}
 
+	public TBGRepositoryConnector getConnector() {
+		return connector;
+	}
+
+	public void setConnector(TBGRepositoryConnector connector) {
+		this.connector = connector;
+	}
+	
 }

@@ -93,4 +93,9 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 
 	}
 
+	public void stop() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -3,6 +3,8 @@ package com.undebugged.mylyn.tbg.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.undebugged.mylyn.tbg.core.TBGCorePlugin;
+
 /**
  * The activator class controls the plug-in life cycle
  */
@@ -18,6 +20,7 @@ public class TBGUIPlugin extends AbstractUIPlugin {
 	 * The constructor
 	 */
 	public TBGUIPlugin() {
+		plugin = this;
 	}
 
 	/*
@@ -26,7 +29,7 @@ public class TBGUIPlugin extends AbstractUIPlugin {
 	 */
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
-		plugin = this;
+		//TBGCorePlugin.getDefault().getConnector().setTaskRepositoryLocationFactory();
 	}
 
 	/*
