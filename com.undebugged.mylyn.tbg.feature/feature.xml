@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="com.undebugged.mylyn.tbg.feature"
+      label="Eclipse Mylyn Connector: The Bug Genie"
+      version="1.0.0.qualifier"
+      provider-name="undebugged.com"
+      plugin="com.undebugged.mylyn.tbg.core">
+
+   <description url="http://www.undebugged.com/mylyn-tbg/">
+      Eclipse Mylyn to The Bug Genie connector.
+   </description>
+
+   <copyright url="http://www.undebugged.com/mylyn-tbg/copyright">
+          Copyright 2012 Guido Grazioli (guido.grazioli@gmail.com)
+   </copyright>
+
+   <license url="http://www.apache.org/licenses/LICENSE-2.0.html">
+      Apache License Version 2.0, January 2004
+   </license>
+
+	<requires>
+      <import plugin="org.eclipse.core.runtime" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.tasks.ui" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.mylyn.tasks.core" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui" version="3.7.0" match="greaterOrEqual"/>
+      <import plugin="org.eclipse.ui.forms" version="3.5.0" match="greaterOrEqual"/>
+   </requires>
+
+   <plugin
+         id="com.undebugged.mylyn.tbg.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="com.undebugged.mylyn.tbg.ui"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

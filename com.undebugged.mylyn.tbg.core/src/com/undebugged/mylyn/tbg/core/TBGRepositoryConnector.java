@@ -19,16 +19,19 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public boolean canCreateNewTask(TaskRepository repository) {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean canCreateTaskFromKey(TaskRepository repository) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
+	@Override
+	public boolean canDeleteTask(TaskRepository repository, ITask task) {
+		return false;
+	}
+	
 	@Override
 	public String getConnectorKind() {
 		return TBGCorePlugin.CONNECTOR_KIND;
@@ -36,7 +39,7 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getLabel() {
-		return "The Bug Genie Connector";
+		return "The Bug Genie (JSON API)";
 	}
 
 	@Override
@@ -60,8 +63,7 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 
 	@Override
 	public String getTaskUrl(String repositoryUrl, String taskId) {
-		// TODO Auto-generated method stub
-		return null;
+		return TBGRepository.createFromUrl(repositoryUrl).getIssueUrl(taskId);
 	}
 
 	@Override
