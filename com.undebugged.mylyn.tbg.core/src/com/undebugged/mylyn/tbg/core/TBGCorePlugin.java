@@ -5,8 +5,16 @@ import org.osgi.framework.BundleContext;
 
 public class TBGCorePlugin extends Plugin {
 
-	public static final String ID_PLUGIN = "org.eclipse.mylyn.trac.core"; //$NON-NLS-1$
-	public static final String CONNECTOR_KIND = "TheBugGenie";
+	public static final String ID_PLUGIN = "com.undebugged.mylyn.tbg.core"; //$NON-NLS-1$
+	public static final String CONNECTOR_KIND = "TheBugGenie";//$NON-NLS-1$;
+	public static final String TBG_QUERY_TYPE = "issuetype";//$NON-NLS-1$;
+	public static final String TBG_QUERY_ASSIGNEE = "assigned_to";//$NON-NLS-1$;
+	public static final String TBG_QUERY_STATE = "state";//$NON-NLS-1$;
+	public static final String TBG_QUERY_TITLE = "title";//$NON-NLS-1$;
+	public static final String TBG_QUERY_PROJECT = "projectKey";//$NON-NLS-1$;
+	public static final String PROPERTY_SECURITYKEY = "securityKey"; //$NON-NLS-1$;
+
+	
 	private static TBGCorePlugin plugin;
 	private TBGRepositoryConnector connector;
 	

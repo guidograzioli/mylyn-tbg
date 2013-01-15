@@ -12,19 +12,22 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 public class TBGCredentials {
 
     public static TBGCredentials create(TaskRepository repository) {
-        return new TBGCredentials(repository.getCredentials(AuthenticationType.REPOSITORY));
+        return new TBGCredentials(repository.getCredentials(AuthenticationType.REPOSITORY), 
+        		repository.getProperty(TBGCorePlugin.PROPERTY_SECURITYKEY));
     }
 
     private final String username;
     private final String password;
+    private final String securityKey;
 
-    public TBGCredentials(String username, String password) {
+    public TBGCredentials(String username, String password, String key) {
         this.username = username;
         this.password = password;
+        this.securityKey = key;
     }
 
-    public TBGCredentials(AuthenticationCredentials credentials) {
-        this(credentials.getUserName(), credentials.getPassword());
+    public TBGCredentials(AuthenticationCredentials credentials, String key) {
+        this(credentials.getUserName(), credentials.getPassword(), key);
     }
 
     public String getUsername() {
@@ -35,9 +38,14 @@ public class TBGCredentials {
         return password;
     }
 
+    public String getSecurityKey() {
+        return securityKey;
+    }
+
+    
     @Override
     public String toString() {
-        return "TBGCredentials[username=" + username + ", password=" + password + "]";
+        return "TBGCredentials[username=" + username + ", password=" + password + ", security=" + securityKey + "]";
     }
 
 }

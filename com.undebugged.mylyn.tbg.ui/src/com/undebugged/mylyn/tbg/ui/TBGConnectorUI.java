@@ -6,6 +6,8 @@ import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.AbstractRepositoryConnectorUi;
 import org.eclipse.mylyn.tasks.ui.wizards.ITaskRepositoryPage;
+import org.eclipse.mylyn.tasks.ui.wizards.NewTaskWizard;
+import org.eclipse.mylyn.tasks.ui.wizards.RepositoryQueryWizard;
 
 import com.undebugged.mylyn.tbg.core.TBGCorePlugin;
 import com.undebugged.mylyn.tbg.ui.wizard.TBGRepositorySettingsPage;
@@ -27,23 +29,20 @@ public class TBGConnectorUI extends AbstractRepositoryConnectorUi {
 	}
 
 	@Override
-	public IWizard getQueryWizard(TaskRepository taskRepository,
-			IRepositoryQuery queryToEdit) {
-		// TODO Auto-generated method stub
-		return null;
+	public IWizard getQueryWizard(TaskRepository repository, IRepositoryQuery query) {
+		RepositoryQueryWizard wizard = new RepositoryQueryWizard(repository);
+        wizard.addPage(new TBGRepositoryQueryPage(repository, query));
+        return wizard;
 	}
 
 	@Override
-	public IWizard getNewTaskWizard(TaskRepository taskRepository,
-			ITaskMapping selection) {
-		// TODO Auto-generated method stub
-		return null;
+	public IWizard getNewTaskWizard(TaskRepository taskRepository, ITaskMapping selection) {
+		return new NewTaskWizard(taskRepository, selection);
 	}
 
 	@Override
 	public boolean hasSearchPage() {
-		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }
