@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
+import java.util.Date;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -15,6 +16,10 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 
 /**
  * Service object to get/search/update issue in The Bug Genie.
@@ -71,8 +76,9 @@ public class TBGService {
     }
     
     private static Gson gson() {
-        return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
+        return new GsonBuilder()
+        		.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .registerTypeAdapter(Date.class, new DateTimestampDeserializer())
                 .create();
     }
 //    
@@ -172,7 +178,8 @@ public class TBGService {
             if (statusCode == HttpStatus.SC_NOT_FOUND) {
                 throw new TBGServiceException("Could not find item, it is possible that the repositories are not in sync, please try and synchronize you repository.");
             }
-            return gson().fromJson(method.getResponseBodyAsString(), type);
+            String json = method.getResponseBodyAsString();
+            return gson().fromJson(json, type);
         } catch (HttpException e) {
             throw new TBGServiceException(e);
         } catch (IOException e) {
@@ -182,4 +189,12 @@ public class TBGService {
         }
     }
     
+    static class DateTimestampDeserializer implements JsonDeserializer<Date> {
+		@Override
+		public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+				throws JsonParseException {
+			long time = Long.parseLong(json.getAsString());
+			return new Date(time*1000);
+		}
+    }
 }

@@ -2,7 +2,6 @@ package com.undebugged.mylyn.tbg.core;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -100,7 +99,7 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
             }
             return Status.OK_STATUS;
         } catch (TBGServiceException e) {
-            return TBGStatus.newErrorStatus(e);
+            return TBGConnectorStatus.newErrorStatus(e);
         } finally {
             monitor.done();
         }

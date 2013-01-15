@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Container of Bitbucket Issues
- * @author shuji.w6e
- * @since 0.1.0
+ * Container of The Bug Genie issues.
  */
 public class TBGIssues extends TBGObject {
 
@@ -53,7 +51,7 @@ public class TBGIssues extends TBGObject {
     }
 
     
-    public Map getParams() {
+    public Map<String, String> getParams() {
         return new HashMap<String, String>();
     }
 

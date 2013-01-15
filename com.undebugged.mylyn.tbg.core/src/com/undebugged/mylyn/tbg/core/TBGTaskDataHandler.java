@@ -23,7 +23,6 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
  
     public TBGTaskDataHandler() {
         mappers.add(new SimpleAttributeDataMapper());
-        //mappers.add(new CommentDataMapper());
     }
 
     @Override

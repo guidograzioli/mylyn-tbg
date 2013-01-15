@@ -5,8 +5,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 /**
- *  provides mapping of simple attributes (those attributes that are part of the BBIssue domain model in Bitbucket).
- *  It primarily uses the BitBucketTaskAttributes enum to perform mapping.
+ *  provides mapping of simple attributes (those attributes that are part of the TBGIssue domain model in Bug Genie).
+ *  It primarily uses the TBGTaskAttributes enum to perform mapping.
  */
 public class SimpleAttributeDataMapper implements TBGIssueToTaskDataMapper {
 

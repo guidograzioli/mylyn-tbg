@@ -17,7 +17,7 @@ import com.undebugged.mylyn.tbg.core.TBGCorePlugin;
 import com.undebugged.mylyn.tbg.core.TBGIssueType;
 import com.undebugged.mylyn.tbg.core.TBGService;
 import com.undebugged.mylyn.tbg.core.TBGServiceException;
-import com.undebugged.mylyn.tbg.core.TBGState;
+import com.undebugged.mylyn.tbg.core.TBGStatus;
 
 public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
@@ -123,7 +123,7 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
         
         IRepositoryQuery oldQuery = getQuery();
         String[] kinds = TBGIssueType.asArray();
-        String[] statuses = TBGState.asArray();
+        String[] statuses = TBGStatus.asArray();
         
         Composite titleGroup = new Composite(parent, SWT.NONE);
         GridLayoutFactory.swtDefaults().numColumns(2).applyTo(titleGroup);

@@ -42,7 +42,6 @@ public class TBGCredentials {
         return securityKey;
     }
 
-    
     @Override
     public String toString() {
         return "TBGCredentials[username=" + username + ", password=" + password + ", security=" + securityKey + "]";
