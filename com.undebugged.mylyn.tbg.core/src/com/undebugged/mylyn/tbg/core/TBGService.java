@@ -3,14 +3,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
-import java.nio.charset.Charset;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
@@ -138,7 +131,7 @@ public class TBGService {
 //            try {
 //                StringBuilder text = new StringBuilder();
 //                for (Entry<String, String> entry : model.getParams().entrySet()) {
-//                    text.append(entry.getKey()).append("=").append(entry.getValue()).append("&");
+//                    text.append(entry.getKey()).append("=").ap0pend(entry.getValue()).append("&");
 //                }
 //                method.setRequestEntity(new StringRequestEntity(text.toString(), "text/plain", "utf-8"));
 //            } catch (UnsupportedEncodingException e) {
@@ -161,12 +154,12 @@ public class TBGService {
         try {
 	        // Authentication
 	        if (credentials != null) {
-				byte[] encrypted = encryptBlowfish(
-						credentials.getPassword(), 
-						("$2a$07$"+credentials.getSecurityKey()+"$").substring(0,28));
-				String encryptedPassword = new String(Base64.encodeBase64(encrypted));
-	        	String token = "tbg3_password="+encryptedPassword+"; tbg3_username="+credentials.getUsername()+";";
-	        	method.addRequestHeader("Cookie", URLEncoder.encode(token, "UTF-8"));
+	        	String encryptedPassword = URLEncoder
+	        			.encode(BCrypt
+	        					.hashpw(credentials.getPassword(), 
+	        							"$2a$07$"+credentials.getSecurityKey()+"$"), "UTF-8");
+				String token = "tbg3_password="+encryptedPassword+"; tbg3_username="+credentials.getUsername()+";";
+	        	method.addRequestHeader("Cookie", token);
 	        }
                 
             int statusCode = client.executeMethod(method);
@@ -189,15 +182,4 @@ public class TBGService {
         }
     }
     
-    private static byte[] encryptBlowfish(String to_encrypt, String strkey) {
-    	  try {
-    		  SecretKeySpec skeySpec = new SecretKeySpec(strkey.getBytes(), "Blowfish");
-    			Cipher cipher = Cipher.getInstance("Blowfish/CBC/PKCS5Padding");
-    			String iv = "00000000";
-    			IvParameterSpec ivs = new IvParameterSpec(iv.getBytes());
-    			cipher.init(Cipher.ENCRYPT_MODE, skeySpec, ivs);
-    			byte[] encrypted = cipher.doFinal(to_encrypt.getBytes());
-    			return encrypted;
-    	  } catch (Exception e) { return null; }
-    	}
 }
