@@ -2,7 +2,6 @@ package com.undebugged.mylyn.tbg.ui.wizard;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.preference.StringFieldEditor;
-import org.eclipse.mylyn.internal.tasks.core.IRepositoryConstants;
 import org.eclipse.mylyn.tasks.core.RepositoryTemplate;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage;

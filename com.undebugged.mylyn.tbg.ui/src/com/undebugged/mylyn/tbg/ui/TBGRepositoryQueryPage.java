@@ -2,33 +2,44 @@ package com.undebugged.mylyn.tbg.ui;
 
 import org.eclipse.jface.layout.GridDataFactory;
 import org.eclipse.jface.layout.GridLayoutFactory;
+import org.eclipse.jface.viewers.ArrayContentProvider;
+import org.eclipse.jface.viewers.ISelectionChangedListener;
+import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.viewers.ListViewer;
+import org.eclipse.jface.viewers.SelectionChangedEvent;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositoryQueryPage;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.wb.swt.ResourceManager;
 
 import com.undebugged.mylyn.tbg.core.TBGCorePlugin;
 import com.undebugged.mylyn.tbg.core.TBGIssueType;
+import com.undebugged.mylyn.tbg.core.TBGProject;
+import com.undebugged.mylyn.tbg.core.TBGProjects;
 import com.undebugged.mylyn.tbg.core.TBGService;
 import com.undebugged.mylyn.tbg.core.TBGServiceException;
-import com.undebugged.mylyn.tbg.core.TBGStatus;
 
 public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
 
     private List statusList;
     private List typeList;
+    private List projectList;
+    private ListViewer projectViewer;
+    private List assigneeList;
     private Text queryTitleText;
-    private Text titleText;
-    private Text assigneeText;
-    private Text projectText;
     
-    TBGService bbs;
+    TBGService service;
 
     private final ModifyListener modifyListener = new ModifyListener() {
         public void modifyText(ModifyEvent e) {
@@ -37,6 +48,7 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
             }
         }
     };
+    private Composite composite;
 
     /**
      * Constructor.
@@ -44,18 +56,19 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
      * @param query
      */
     public TBGRepositoryQueryPage(TaskRepository taskRepository, IRepositoryQuery query) {
-        super("Bitbucket", taskRepository, query);
-        setTitle("Bitbucket search query parameters");
-        setDescription("Enter query title and parameters.");
-        //setImageDescriptor(BitbucketImages.getIcon());
+        super("The Bug Genie", taskRepository, query);
+        setImageDescriptor(ResourceManager.getPluginImageDescriptor("com.undebugged.mylyn.tbg.ui", "icons/thebuggenie.png"));
+        setTitle("The Bug Genie search query parameters");
+        setDescription("Enter query title, select project and optional parameters.");
         setPageComplete(false);
-        bbs = TBGService.get(taskRepository);
+        service = TBGService.get(taskRepository);
         
     }
 
     @Override
     public boolean isPageComplete() {
         if (getQueryTitle().isEmpty()) return false;
+        if (((IStructuredSelection)projectViewer.getSelection()).isEmpty()) return false;
         setErrorMessage(null);
         return true;
     }
@@ -71,12 +84,9 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
         
         setAttributeIfNotEmpty(query, TBGCorePlugin.TBG_QUERY_STATE, statusList.getSelection());
         setAttributeIfNotEmpty(query, TBGCorePlugin.TBG_QUERY_TYPE, typeList.getSelection());
-        query.setAttribute(TBGCorePlugin.TBG_QUERY_PROJECT, projectText.getText());
-//        setAttributeIfNotEmpty(query, Bitbucket.QUERY_KEY_MILESTONE, milestoneList.getSelection());
-//        setAttributeIfNotEmpty(query, Bitbucket.QUERY_KEY_COMPONENT, componentList.getSelection());
-//        setAttributeIfNotEmpty(query, Bitbucket.QUERY_KEY_PRIORITY, priorityList.getSelection());
-//        query.setAttribute(Bitbucket.QUERY_KEY_TITLE, titleText.getText());
-//        query.setAttribute(Bitbucket.QUERY_KEY_ASSIGNEE, assigneeText.getText());
+        setAttributeIfNotEmpty(query, TBGCorePlugin.TBG_QUERY_ASSIGNEE, assigneeList.getSelection());
+        TBGProject project = (TBGProject) ((IStructuredSelection)projectViewer.getSelection()).getFirstElement();
+        query.setAttribute(TBGCorePlugin.TBG_QUERY_PROJECT, project.getProjectKey());
         System.err.println(query.getAttributes().toString());        
     }
     
@@ -91,8 +101,8 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
     }
     
     public void createControl(Composite parent) {
-        Composite composite = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.swtDefaults().applyTo(composite);
+        composite = new Composite(parent, SWT.NONE);
+        composite.setLayout(new GridLayout(1, false));
         createGeneralControl(composite);
         try {
         	createIssueAttributesControl(composite);
@@ -122,87 +132,95 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
         
         
         IRepositoryQuery oldQuery = getQuery();
-        String[] kinds = TBGIssueType.asArray();
-        String[] statuses = TBGStatus.asArray();
+        String[] issueTypes = TBGIssueType.asArray();
+        String[] statuses = new String[] {"all", "open","closed" };
+        String[] assignees = new String[] {"all", "me", "none" };
+        TBGProjects projects = service.doGet(new TBGProjects());
         
-        Composite titleGroup = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.swtDefaults().numColumns(2).applyTo(titleGroup);
-        {
-            Label label = new Label(titleGroup,SWT.LEFT);
-            label.setText("Project");
-        }
-        {
-            projectText = new Text(titleGroup, SWT.BORDER);
-            if (oldQuery != null) {
-                    projectText.setText(oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT));
-            }
-        }
 
-        {
-                Label label = new Label(titleGroup,SWT.LEFT);
-                label.setText("Title");
-        }
-        {
-                titleText = new Text(titleGroup, SWT.BORDER);
-                if (oldQuery != null && oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_TITLE) != null) {
-                        titleText.setText(oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_TITLE));
-                }
-        }
-        {
-                Label label = new Label(titleGroup,SWT.LEFT);
-                label.setText("Assignee");
-        }
-        {
-                assigneeText = new Text(titleGroup, SWT.BORDER);
-                if (oldQuery != null && oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_ASSIGNEE) != null) {
-                	assigneeText.setText(oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_ASSIGNEE));
-                }
-        }
         Composite group = new Composite(parent, SWT.NONE);
-        GridLayoutFactory.swtDefaults().numColumns(6).applyTo(group);
-        { // Label
+        group.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true, 1, 1));
+        GridLayoutFactory.swtDefaults().numColumns(4).applyTo(group);
+        group.setLayout(new GridLayout(4, true));
+        {
+            Label lblProject = new Label(group, SWT.LEFT);
+            lblProject.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+            lblProject.setText("Project");
+        }
+        {
+            Label lblAssignee = new Label(group, SWT.LEFT);
+            lblAssignee.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+            lblAssignee.setText("Assignee");
+        }        
+        {
             Label label = new Label(group, SWT.LEFT);
+            label.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
             label.setText("Type");
         }
         {
-            Label label = new Label(group, SWT.LEFT);
-            label.setText("Priority");
+            Label lblState = new Label(group, SWT.LEFT);
+            lblState.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+            lblState.setText("State");
         }
         {
-            Label label = new Label(group, SWT.LEFT);
-            label.setText("Status");
-        }
-//        {
-//            Label label = new Label(group, SWT.LEFT);
-//            label.setText("Version");
-//        }
-//        {
-//            Label label = new Label(group, SWT.LEFT);
-//            label.setText("Milestone");
-//        }
-//        {
-//            Label label = new Label(group, SWT.LEFT);
-//            label.setText("Component");
-//        }
-        {
-            typeList = new List(group, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
-            GridDataFactory.defaultsFor(typeList).applyTo(typeList);
-            for (String text : kinds) {
-                typeList.add(text);
+            projectList = new List(group, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+            projectList.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+            GridDataFactory.defaultsFor(projectList).applyTo(projectList);
+            projectViewer = new ListViewer(projectList);
+            projectViewer.setContentProvider(new ArrayContentProvider());
+            projectViewer.setLabelProvider(new LabelProvider() {
+				@Override
+				public String getText(Object element) {
+					return ((TBGProject)element).getProjectName();
+				}
+            });
+            projectViewer.setInput(projects.getAsProjectSet());
+            if (oldQuery != null) {
+                String projectValue = oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT);
+                projectViewer.setSelection(new StructuredSelection(
+                		new TBGProject(projectValue, projects.getProjectName(projectValue))));
             }
+            projectViewer.addSelectionChangedListener(new ISelectionChangedListener() {
+				@Override
+				public void selectionChanged(SelectionChangedEvent event) {
+					setPageComplete(isPageComplete());
+				}
+			});
+        }
+        {
+            assigneeList = new List(group, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+            assigneeList.setLayoutData(new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1));
+            GridDataFactory.defaultsFor(assigneeList).applyTo(assigneeList);
+            assigneeList.setItems(assignees);
+            if (oldQuery != null) {
+                String assigneeValue = oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_ASSIGNEE);
+                if (assigneeValue != null) 
+                	for (int i = 0; i < assignees.length; i++) {
+	                    if (assigneeValue.equals(assignees[i])) {
+	                    	assigneeList.select(i);
+	                    }
+	                }
+            }
+        }        
+        {
+            typeList = new List(group, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+            typeList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
+            GridDataFactory.defaultsFor(typeList).applyTo(typeList);
+            typeList.setItems(issueTypes);
             if (oldQuery != null) {
                 String kindValues = oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_TYPE);
-                for (int i = 0; i < kinds.length; i++) {
-                    if (kindValues.contains(kinds[i])) {
+                for (int i = 0; i < issueTypes.length; i++) {
+                    if (kindValues.contains(issueTypes[i])) {
                         typeList.select(i);
                     }
                 }
-            } else {
-                typeList.select(new int[] { 0, 1 });
             }
         }
         {
-            statusList = new List(group, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
+            statusList = new List(group, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+            GridData gd_statusList = new GridData(SWT.LEFT, SWT.FILL, false, false, 1, 1);
+            gd_statusList.widthHint = 22;
+            statusList.setLayoutData(gd_statusList);
             GridDataFactory.defaultsFor(statusList).applyTo(statusList);
             for (String text : statuses) {
                 statusList.add(text);

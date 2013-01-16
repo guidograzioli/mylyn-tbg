@@ -10,13 +10,9 @@ import com.google.gson.reflect.TypeToken;
 
 public class TBGIssue extends TBGObject {
 
-    /** issue id */
     private String id;
-    /** issue title */
     private String title;
-    /** issue content */
     private String content;
-    /** issue created on */
     private Date createdAt;
     private String status;
     private String issueNo;
@@ -24,7 +20,7 @@ public class TBGIssue extends TBGObject {
     private Date lastUpdated;
     private String assignedTo;
     private String postedBy;
-    
+    private String issueType;
     private String resourceUri;
     
     public TBGIssue() {}
@@ -145,11 +141,19 @@ public class TBGIssue extends TBGObject {
         this.resourceUri = resourceUri;
     }
 
+    public String getIssueType() {
+		return issueType;
+	}
 
-    @Override
+	public void setIssueType(String issueType) {
+		this.issueType = issueType;
+	}
+
+	@Override
     public String toString() {
         return "TBGIssue [id=" + id + ", title=" + title + ", content=" + content + ", createdOn="
-                + createdAt + ", status=" + status + ", priority=" + priority +  "]";
+                + createdAt + ", status=" + status + ", priority=" + priority +  
+                ", issuetype=" + issueType + "]";
     }
     
 
@@ -159,13 +163,14 @@ public class TBGIssue extends TBGObject {
         params.put("content", getContent());
         params.put("status", getStatus());
         params.put("priority", getPriority());
+        params.put("issueType", getIssueType());
         return params;
     }
 
     @Override
-    public String buildUrl(TBGRepository bbr) {
+    public String buildUrl(TBGRepository r) {
         //return TBGRepository.API_BITBUCKET + TBGRepository.REPO_PART + bbr.getUsername() + "/" + bbr.getRepoSlug() + "/issues/";
-    	return bbr.getUrl();
+    	return r.getUrl();
     }
     
     @Override

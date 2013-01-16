@@ -92,7 +92,7 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
             TBGIssues issues = TBGService.get(repository).searchIssues(TBGQuery.get(query));
             // collect task data
             if (issues == null) return Status.OK_STATUS;
-            for (TBGIssue issue : issues.getIssues()) {
+            for (TBGIssue issue : issues.getIssuesList()) {
                 //addCommentsToIssue(repository,issue);
                 TaskData taskData = taskDataHandler.toTaskData(repository, issue);
                 collector.accept(taskData);

@@ -3,8 +3,6 @@ package com.undebugged.mylyn.tbg.ui;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.undebugged.mylyn.tbg.core.TBGCorePlugin;
-
 /**
  * The activator class controls the plug-in life cycle
  */

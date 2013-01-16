@@ -64,19 +64,19 @@ public enum TBGTaskAttributes {
 //            issue.setContent(value);
 //        }
 
-//    },
-//    KIND(TaskAttribute.TASK_KIND, "Kind", new EnumOptionProvider(TBGIssueType.asArray())) {
-//
-//        @Override
-//        public String getValueFromIssue(TBGIssue issue) {
-//            return issue.getMetadata().getKind();
-//        }
-//
-//        @Override
-//        public void setValueInIssue(TBGIssue issue, String value) {
-//            issue.getMetadata().setKind(value);
-//        }
-//
+    },
+    KIND(TaskAttribute.TASK_KIND, "IssueType", new EnumOptionProvider(TBGIssueType.asArray())) {
+
+        @Override
+        public String getValueFromIssue(TBGIssue issue) {
+            return issue.getIssueType();
+        }
+
+        @Override
+        public void setValueInIssue(TBGIssue issue, String value) {
+            issue.setIssueType(value);
+        }
+
 //    },
 //    PRIORITY(TaskAttribute.PRIORITY, "Priority", new EnumOptionProvider(BBPriority.asArray())) {
 //

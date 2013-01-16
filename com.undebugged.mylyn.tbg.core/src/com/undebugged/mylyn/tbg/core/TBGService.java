@@ -48,11 +48,11 @@ public class TBGService {
         this.credentials = credentials;
     }
 
-//    public boolean verifyCredentials() throws TBGServiceException {
-//        doGet(new BBIssues());
-//        return true;
-//    }
-//    
+    public boolean verifyCredentials() throws TBGServiceException {
+        doGet(new TBGProjects());
+        return true;
+    }
+    
     public TBGIssues searchIssues(TBGQuery query) throws TBGServiceException {
         String uri;
         try {
@@ -79,6 +79,7 @@ public class TBGService {
         return new GsonBuilder()
         		.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(Date.class, new DateTimestampDeserializer())
+                .registerTypeAdapter(TBGProjects.class, new TBGProjects().new TBGProjectsDeserializer())
                 .create();
     }
 //    
@@ -99,20 +100,20 @@ public class TBGService {
 //        return execute(method, credentials, ((BBModelI) model).getListType());
 //    }
 //    
-//    public <T> T doGet(BBModelI model)
-//            throws TBGServiceException {
-//        String uri = model.buildUrl(repository) + model.getKey();
-//        System.err.println("Calling uri: "  + uri);
-//        GetMethod method = new GetMethod(uri); 
-//        T returned = execute(method, credentials, model.getClass());
-//        return returned;
-//    }
-//    
+    public <T> T doGet(TBGObject model) throws TBGServiceException {
+        String uri = model.buildUrl(repository) + model.getKey();
+        System.err.println("Calling uri: "  + uri);
+        GetMethod method = new GetMethod(uri); 
+        T returned = execute(method, credentials, model.getClass());
+        return returned;
+    }
+    
     public TBGIssues doGetIssuesQuery(String uri) throws TBGServiceException {
         GetMethod method = new GetMethod(uri); 
         TBGIssues issues = execute(method, credentials, TBGIssues.class);
         return issues;
     }
+
     
 //
 //    public <T extends BBModelI> T doPost(T model) throws TBGServiceException {

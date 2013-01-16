@@ -1,18 +1,18 @@
 package com.undebugged.mylyn.tbg.core;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Container of The Bug Genie issues.
  */
 public class TBGIssues extends TBGObject {
 
-    private final List<TBGIssue> issues = new ArrayList<TBGIssue>();
+    private final Map<Integer,TBGIssue> issues = new HashMap<Integer,TBGIssue>();
     
     private int count = 0;
     
@@ -24,22 +24,26 @@ public class TBGIssues extends TBGObject {
         return issues.get(idx);
     }
     
-    public List<TBGIssue> getIssues() {
-        return issues;
+    public Map<Integer,TBGIssue> getIssues() {
+    	return issues;
     }
     
-    public int addMoreIssues(List<TBGIssue> moreIssues) {
-        issues.addAll(moreIssues);
-        return issues.size();
+    public Collection<TBGIssue> getIssuesList() {
+    	return issues.values();
     }
-
+    
+    public Set<Integer> getIssuesId() {
+    	return issues.keySet();
+    }
+    
+    
     @Override
     public String toString() {
         StringBuilder str = new StringBuilder();
-        str.append("BitbucketIssues[");
+        str.append("TBGIssues[");
         str.append("count=").append(count);
         str.append(", issues=[");
-        for (Iterator<TBGIssue> iter = issues.iterator(); iter.hasNext();) {
+        for (Iterator<TBGIssue> iter = issues.values().iterator(); iter.hasNext();) {
             TBGIssue issue = iter.next();
             str.append(issue.getLocalId());
             if (iter.hasNext()) {
@@ -66,9 +70,13 @@ public class TBGIssues extends TBGObject {
     }
 
     @Override
-    public String buildUrl(TBGRepository bbr) {
+    public String buildUrl(TBGRepository r) {
         //return TBGRepository.API_BITBUCKET + TBGRepository.REPO_PART + bbr.getUsername() + "/" + bbr.getRepoSlug() + "/" + "issues/";
-    	return bbr.getUrl();
+    	return r.getUrl();
     }
+
+	public void addMoreIssues(Map<Integer, TBGIssue> moreIssues) {
+		issues.putAll(moreIssues);
+	}
 
 }
