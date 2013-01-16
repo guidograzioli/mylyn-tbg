@@ -1,4 +1,4 @@
-package com.undebugged.mylyn.tbg.core;
+package com.undebugged.mylyn.tbg.core.model;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+
+import com.undebugged.mylyn.tbg.core.TBGRepository;
 
 /**
  * Container of The Bug Genie issues.

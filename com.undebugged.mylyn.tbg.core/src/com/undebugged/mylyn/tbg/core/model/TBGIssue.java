@@ -1,4 +1,4 @@
-package com.undebugged.mylyn.tbg.core;
+package com.undebugged.mylyn.tbg.core.model;
 
 import java.lang.reflect.Type;
 import java.util.Date;
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.reflect.TypeToken;
+import com.undebugged.mylyn.tbg.core.TBGRepository;
 
 public class TBGIssue extends TBGObject {
 
@@ -22,8 +23,15 @@ public class TBGIssue extends TBGObject {
     private String postedBy;
     private String issueType;
     private String resourceUri;
+    private String projectKey;
     
     public TBGIssue() {}
+    
+    public TBGIssue(String taskId) {
+    	String[] parts = taskId.split("\\|");
+    	this.issueNo = parts[1];
+    	this.projectKey = parts[0];
+    }
     
     //respoinsible
     
@@ -169,13 +177,22 @@ public class TBGIssue extends TBGObject {
 
     @Override
     public String buildUrl(TBGRepository r) {
-        //return TBGRepository.API_BITBUCKET + TBGRepository.REPO_PART + bbr.getUsername() + "/" + bbr.getRepoSlug() + "/issues/";
-    	return r.getUrl();
+        return r.getUrl() + "/" + getProjectKey() + "/issues/" + getIssueNo().replaceAll("[^0-9]","") + "/format/json/";
     }
     
-    @Override
+    
+    
+    public String getProjectKey() {
+		return projectKey;
+	}
+
+	public void setProjectKey(String projectKey) {
+		this.projectKey = projectKey;
+	}
+
+	@Override
     public String getKey() {
-        return this.getLocalId();
+        return "";
     }
 
     public Type getListType() {

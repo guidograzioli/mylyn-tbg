@@ -25,13 +25,16 @@ public class TBGQuery {
         StringBuilder query = new StringBuilder();
         query.append("/").append(projectKey).append("/list/issues/json/");
         for (String status : states) {
-            query.append("state/").append(URLEncoder.encode(status, "UTF-8")).append("/");
+        	if (status.equals("open") || status.equals("closed"))
+        		query.append("state/").append(URLEncoder.encode(status, "UTF-8")).append("/");
         }
         for (String kind : issueTypes) {
-            query.append("issuetype/").append(URLEncoder.encode(kind, "UTF-8")).append("/");
+        	if (!kind.equals("all"))
+        		query.append("issuetype/").append(URLEncoder.encode(kind.replace(" ",""), "UTF-8")).append("/");
         }
         if (StringUtils.isNotBlank(assignee)) {
-            query.append("assigned_to/").append(URLEncoder.encode(assignee, "UTF-8")).append("/");           
+        	if (!assignee.equals("all"))
+        		query.append("assigned_to/").append(URLEncoder.encode(assignee, "UTF-8")).append("/");           
         }
         return query.toString();
     }

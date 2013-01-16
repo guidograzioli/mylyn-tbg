@@ -14,6 +14,8 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.undebugged.mylyn.tbg.core.model.TBGIssue;
+
 public class TBGTaskDataHandler extends AbstractTaskDataHandler {
 
     private static final String DATA_VERSION = "1";

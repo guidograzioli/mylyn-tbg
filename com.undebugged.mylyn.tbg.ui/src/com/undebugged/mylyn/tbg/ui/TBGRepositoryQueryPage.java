@@ -24,11 +24,11 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.wb.swt.ResourceManager;
 
 import com.undebugged.mylyn.tbg.core.TBGCorePlugin;
-import com.undebugged.mylyn.tbg.core.TBGIssueType;
-import com.undebugged.mylyn.tbg.core.TBGProject;
-import com.undebugged.mylyn.tbg.core.TBGProjects;
 import com.undebugged.mylyn.tbg.core.TBGService;
 import com.undebugged.mylyn.tbg.core.TBGServiceException;
+import com.undebugged.mylyn.tbg.core.model.TBGIssueType;
+import com.undebugged.mylyn.tbg.core.model.TBGProject;
+import com.undebugged.mylyn.tbg.core.model.TBGProjects;
 
 public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
 

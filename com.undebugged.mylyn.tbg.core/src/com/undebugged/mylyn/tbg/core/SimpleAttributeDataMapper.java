@@ -4,6 +4,8 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.undebugged.mylyn.tbg.core.model.TBGIssue;
+
 /**
  *  provides mapping of simple attributes (those attributes that are part of the TBGIssue domain model in Bug Genie).
  *  It primarily uses the TBGTaskAttributes enum to perform mapping.

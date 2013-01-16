@@ -1,5 +1,7 @@
 package com.undebugged.mylyn.tbg.core;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,9 +17,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
+import com.undebugged.mylyn.tbg.core.model.TBGIssue;
+import com.undebugged.mylyn.tbg.core.model.TBGIssues;
+
 public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 
 	private final TBGTaskDataHandler taskDataHandler;
+	// issue ID , projectKey|issueNo
+	private final Map<String,String> cache = new HashMap<String,String>();
 	
 	public TBGRepositoryConnector() {
 		this.taskDataHandler = new TBGTaskDataHandler();
@@ -55,9 +62,22 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public TaskData getTaskData(TaskRepository taskRepository, String taskId,
+	public TaskData getTaskData(TaskRepository repository, String taskId,
 			IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
+		monitor.beginTask("Querying repository ...", 100);
+        try {
+        	if (cache.get(taskId) != null) { 
+	            TBGIssue issue = TBGService.get(repository).doGet(new TBGIssue(cache.get(taskId)));
+	            monitor.worked(60);
+	            TaskData taskData = taskDataHandler.toTaskData(repository, issue);
+	            return taskData;
+        	}
+        } catch (TBGServiceException e) {
+        	e.printStackTrace();
+            System.err.println(e.getMessage());
+        } finally {
+            monitor.done();
+        }
 		return null;
 	}
 
@@ -87,15 +107,18 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 	public IStatus performQuery(TaskRepository repository,
 			IRepositoryQuery query, TaskDataCollector collector,
 			ISynchronizationSession session, IProgressMonitor monitor) {
-		monitor.beginTask("Querying repository ...", 1);
+		monitor.beginTask("Querying repository ...", 100);
         try {
             TBGIssues issues = TBGService.get(repository).searchIssues(TBGQuery.get(query));
+            monitor.worked(60);
             // collect task data
             if (issues == null) return Status.OK_STATUS;
             for (TBGIssue issue : issues.getIssuesList()) {
                 //addCommentsToIssue(repository,issue);
                 TaskData taskData = taskDataHandler.toTaskData(repository, issue);
                 collector.accept(taskData);
+                monitor.worked(40/issues.getCount());
+                cache.put(issue.getId(), query.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT)+"|"+issue.getIssueNo());
             }
             return Status.OK_STATUS;
         } catch (TBGServiceException e) {

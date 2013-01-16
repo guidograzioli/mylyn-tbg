@@ -20,6 +20,9 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.undebugged.mylyn.tbg.core.model.TBGIssues;
+import com.undebugged.mylyn.tbg.core.model.TBGObject;
+import com.undebugged.mylyn.tbg.core.model.TBGProjects;
 
 /**
  * Service object to get/search/update issue in The Bug Genie.
@@ -63,15 +66,7 @@ public class TBGService {
         }
         TBGIssues issues = doGetIssuesQuery(uri);
         if (issues == null) return null;
-        while(issues.getCount() > issues.getIssues().size()) {
-            try {
-            	uri = repository.getUrl() + query.toQueryString(0);
-                System.err.println(uri);
-            } catch (UnsupportedEncodingException e) {
-               throw new TBGServiceException(e);
-            }
-            issues.addMoreIssues(doGetIssuesQuery(uri).getIssues());
-        }
+
         return issues;
     }
     

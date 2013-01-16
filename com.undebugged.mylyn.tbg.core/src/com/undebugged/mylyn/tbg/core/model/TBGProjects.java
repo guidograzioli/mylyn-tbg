@@ -1,4 +1,4 @@
-package com.undebugged.mylyn.tbg.core;
+package com.undebugged.mylyn.tbg.core.model;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -11,6 +11,7 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
+import com.undebugged.mylyn.tbg.core.TBGRepository;
 
 public class TBGProjects extends TBGObject {
 

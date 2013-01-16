@@ -1,4 +1,4 @@
-package com.undebugged.mylyn.tbg.core;
+package com.undebugged.mylyn.tbg.core.model;
 
 public enum TBGIssueType {
     

@@ -1,8 +1,10 @@
-package com.undebugged.mylyn.tbg.core;
+package com.undebugged.mylyn.tbg.core.model;
 
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.undebugged.mylyn.tbg.core.TBGRepository;
 
 public class TBGProject extends TBGObject {
 

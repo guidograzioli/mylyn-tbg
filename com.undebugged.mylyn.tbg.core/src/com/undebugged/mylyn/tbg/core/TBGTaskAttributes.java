@@ -2,6 +2,10 @@ package com.undebugged.mylyn.tbg.core;
 
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
+import com.undebugged.mylyn.tbg.core.model.TBGIssue;
+import com.undebugged.mylyn.tbg.core.model.TBGIssueType;
+import com.undebugged.mylyn.tbg.core.model.TBGStatus;
+
 /**
  * The Bug Genie task attribute enumeration.
  * Each enum represents an attribute of an Issue in TBG.
