@@ -6,6 +6,8 @@ import java.net.URLEncoder;
 import org.apache.commons.lang.StringUtils;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 
+import com.undebugged.mylyn.tbg.core.model.TBGObject;
+
 public class TBGQuery {
 
     private String[] states; // open, closed, all
@@ -24,13 +26,13 @@ public class TBGQuery {
     public String toQueryString(int offset) throws UnsupportedEncodingException  {
         StringBuilder query = new StringBuilder();
         query.append("/").append(projectKey).append("/list/issues/json/");
-        for (String status : states) {
-        	if (status.equals("open") || status.equals("closed"))
-        		query.append("state/").append(URLEncoder.encode(status, "UTF-8")).append("/");
+        for (String state : states) {
+        	if (state.equals("open") || state.equals("closed"))
+        		query.append("state/").append(state).append("/");
         }
         for (String kind : issueTypes) {
         	if (!kind.equals("all"))
-        		query.append("issuetype/").append(URLEncoder.encode(kind.replace(" ",""), "UTF-8")).append("/");
+        		query.append("issuetype/").append(TBGObject.generateKey(kind)).append("/");
         }
         if (StringUtils.isNotBlank(assignee)) {
         	if (!assignee.equals("all"))

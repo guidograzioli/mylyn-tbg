@@ -44,7 +44,7 @@ public class TBGProject extends TBGObject {
 	}
 
 	@Override
-	public String getKey() {
+	public String getObjectKey() {
 		return "";
 	}
 

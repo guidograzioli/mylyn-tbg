@@ -191,7 +191,7 @@ public class TBGIssue extends TBGObject {
 	}
 
 	@Override
-    public String getKey() {
+    public String getObjectKey() {
         return "";
     }
 

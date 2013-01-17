@@ -11,8 +11,12 @@ public abstract class TBGObject {
     
     public abstract String buildUrl(TBGRepository bbr);
     
-    public abstract String getKey();
+    public abstract String getObjectKey();
     
     public abstract Type getListType();
 
+    public static String generateKey(String name) {
+    	if (name == null) return null;
+    	return name.toLowerCase().replaceAll("[^0-9a-z]", "");
+    }
 }

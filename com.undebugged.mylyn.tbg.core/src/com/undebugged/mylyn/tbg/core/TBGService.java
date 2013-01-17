@@ -96,7 +96,7 @@ public class TBGService {
 //    }
 //    
     public <T> T doGet(TBGObject model) throws TBGServiceException {
-        String uri = model.buildUrl(repository) + model.getKey();
+        String uri = model.buildUrl(repository) + model.getObjectKey();
         System.err.println("Calling uri: "  + uri);
         GetMethod method = new GetMethod(uri); 
         T returned = execute(method, credentials, model.getClass());

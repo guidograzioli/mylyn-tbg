@@ -62,7 +62,7 @@ public class TBGIssues extends TBGObject {
     }
 
     @Override
-    public String getKey() {
+    public String getObjectKey() {
         return "";
     }
     
