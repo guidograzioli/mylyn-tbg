@@ -174,11 +174,10 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
 					return ((TBGProject)element).getProjectName();
 				}
             });
-            projectViewer.setInput(projects.getAsProjectSet());
+            projectViewer.setInput(projects.getProjects());
             if (oldQuery != null) {
                 String projectValue = oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT);
-                projectViewer.setSelection(new StructuredSelection(
-                		new TBGProject(projectValue, projects.getProjectName(projectValue))));
+                projectViewer.setSelection(new StructuredSelection(new TBGProject(projectValue,"")));
             }
             projectViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 				@Override

@@ -21,9 +21,18 @@ public class TBGIssue extends TBGObject {
     private Date lastUpdated;
     private String assignedTo;
     private String postedBy;
-    private String issueType;
+    private String issuetype;
     private String resourceUri;
     private String projectKey;
+    private String severity;
+    private String category;
+    private String build;
+    private String edition;
+    private String resolution;
+    private String milestone;
+    private String description;
+    private String reproductionSteps;
+    
     
     public TBGIssue() {}
     
@@ -45,7 +54,23 @@ public class TBGIssue extends TBGObject {
 
     
         
-    public Date getLastUpdated() {
+    public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getReproductionSteps() {
+		return reproductionSteps;
+	}
+
+	public void setReproductionSteps(String reproductionSteps) {
+		this.reproductionSteps = reproductionSteps;
+	}
+
+	public Date getLastUpdated() {
 		return lastUpdated;
 	}
 
@@ -150,18 +175,18 @@ public class TBGIssue extends TBGObject {
     }
 
     public String getIssueType() {
-		return issueType;
+		return issuetype;
 	}
 
 	public void setIssueType(String issueType) {
-		this.issueType = issueType;
+		this.issuetype = issueType;
 	}
 
 	@Override
     public String toString() {
-        return "TBGIssue [id=" + id + ", title=" + title + ", content=" + content + ", createdOn="
-                + createdAt + ", status=" + status + ", priority=" + priority +  
-                ", issuetype=" + issueType + "]";
+        return "TBGIssue [id=" + id + ", title=" + title + ", description=" + description + ",steps="+ reproductionSteps +
+        		", createdOn=" + createdAt + ", status=" + status + ", priority=" + priority +  
+                ", issuetype=" + issuetype + "]";
     }
     
 
@@ -198,6 +223,54 @@ public class TBGIssue extends TBGObject {
     public Type getListType() {
         return new TypeToken<List<TBGIssue>>(){}.getType();
     }
+
+	public String getSeverity() {
+		return severity;
+	}
+
+	public void setSeverity(String severity) {
+		this.severity = severity;
+	}
+
+	public String getCategory() {
+		return category;
+	}
+
+	public void setCategory(String category) {
+		this.category = category;
+	}
+
+	public String getBuild() {
+		return build;
+	}
+
+	public void setBuild(String build) {
+		this.build = build;
+	}
+
+	public String getEdition() {
+		return edition;
+	}
+
+	public void setEdition(String edition) {
+		this.edition = edition;
+	}
+
+	public String getResolution() {
+		return resolution;
+	}
+
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
+	}
+
+	public String getMilestone() {
+		return milestone;
+	}
+
+	public void setMilestone(String milestone) {
+		this.milestone = milestone;
+	}
 
 
 

@@ -1,11 +1,11 @@
 package com.undebugged.mylyn.tbg.core.model;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.undebugged.mylyn.tbg.core.TBGRepository;
 
@@ -14,7 +14,7 @@ import com.undebugged.mylyn.tbg.core.TBGRepository;
  */
 public class TBGIssues extends TBGObject {
 
-    private final Map<Integer,TBGIssue> issues = new HashMap<Integer,TBGIssue>();
+    private final List<TBGIssue> issues = new ArrayList<TBGIssue>();
     
     private int count = 0;
     
@@ -26,18 +26,9 @@ public class TBGIssues extends TBGObject {
         return issues.get(idx);
     }
     
-    public Map<Integer,TBGIssue> getIssues() {
+    public List<TBGIssue> getIssues() {
     	return issues;
     }
-    
-    public Collection<TBGIssue> getIssuesList() {
-    	return issues.values();
-    }
-    
-    public Set<Integer> getIssuesId() {
-    	return issues.keySet();
-    }
-    
     
     @Override
     public String toString() {
@@ -45,9 +36,9 @@ public class TBGIssues extends TBGObject {
         str.append("TBGIssues[");
         str.append("count=").append(count);
         str.append(", issues=[");
-        for (Iterator<TBGIssue> iter = issues.values().iterator(); iter.hasNext();) {
+        for (Iterator<TBGIssue> iter = issues.iterator(); iter.hasNext();) {
             TBGIssue issue = iter.next();
-            str.append(issue.getLocalId());
+            str.append(issue.getId());
             if (iter.hasNext()) {
                 str.append(",");
             }
@@ -77,8 +68,8 @@ public class TBGIssues extends TBGObject {
     	return r.getUrl();
     }
 
-	public void addMoreIssues(Map<Integer, TBGIssue> moreIssues) {
-		issues.putAll(moreIssues);
+	public void addMoreIssues(List<TBGIssue> moreIssues) {
+		issues.addAll(moreIssues);
 	}
 
 }

@@ -18,12 +18,16 @@ public enum TBGStatus {
         this.status = status;
     }
     
-    private final String status;
+    private String status;
 
     public String getStatus() {
         return status;
     }
 
+    public void setName(String name) {
+    	this.status = name;
+    }
+    
     public static String[] asArray() {
         return new String[] {
     		NEW.getStatus(), INVESTIGATING.getStatus(), CONFIRMED.getStatus(), NEARCOMPLETION.getStatus(), 

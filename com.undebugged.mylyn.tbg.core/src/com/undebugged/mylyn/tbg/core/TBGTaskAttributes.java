@@ -4,6 +4,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
 import com.undebugged.mylyn.tbg.core.model.TBGIssueType;
+import com.undebugged.mylyn.tbg.core.model.TBGPriority;
 import com.undebugged.mylyn.tbg.core.model.TBGStatus;
 
 /**
@@ -23,7 +24,6 @@ public enum TBGTaskAttributes {
         public String getValueFromIssue(TBGIssue issue) {
             return issue.getStatus();
         }
-
         @Override
         public void setValueInIssue(TBGIssue issue, String value) {
             issue.setStatus(value);
@@ -36,63 +36,61 @@ public enum TBGTaskAttributes {
         public String getValueFromIssue(TBGIssue issue) {
             return issue.getId();
         }
-
         @Override
         public void setValueInIssue(TBGIssue issue, String value) {
             issue.setId(value);
         }
 
     },
-    SUMMARY(TaskAttribute.SUMMARY, "Title", BuilderFlag.IS_SMALL_EDITABLE_TEXT) {
+    SUMMARY(TaskAttribute.SUMMARY, "title") {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
             return issue.getTitle();
         }
-
         @Override
         public void setValueInIssue(TBGIssue issue, String value) {
             issue.setTitle(value);
         }
 
-//    },
-//    DESCRIPTION(TaskAttribute.DESCRIPTION, "Content", BuilderFlag.IS_OPTIONAL,BuilderFlag.LARGE_EDITABLE_TEXT) {
-//
-//        @Override
-//        public String getValueFromIssue(TBGIssue issue) {
-//            return issue.getContent();
-//        }
-//
-//        @Override
-//        public void setValueInIssue(TBGIssue issue, String value) {
-//            issue.setContent(value);
-//        }
+    },
+    DESCRIPTION(TaskAttribute.DESCRIPTION, "Content", BuilderFlag.IS_OPTIONAL,BuilderFlag.LARGE_EDITABLE_TEXT) {
+
+        @Override
+        public String getValueFromIssue(TBGIssue issue) {
+            return issue.getDescription();
+        }
+
+        @Override
+        public void setValueInIssue(TBGIssue issue, String value) {
+            issue.setDescription(value);
+        }
 
     },
-    KIND(TaskAttribute.TASK_KIND, "IssueType", new EnumOptionProvider(TBGIssueType.asArray())) {
+    KIND(TaskAttribute.TASK_KIND, "issuetype", new EnumOptionProvider(TBGIssueType.asArray())) {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
             return issue.getIssueType();
         }
-
         @Override
         public void setValueInIssue(TBGIssue issue, String value) {
             issue.setIssueType(value);
         }
 
-//    },
-//    PRIORITY(TaskAttribute.PRIORITY, "Priority", new EnumOptionProvider(BBPriority.asArray())) {
-//
-//        @Override
-//        public String getValueFromIssue(TBGIssue issue) {
-//            return issue.getPriority();
-//        }
-//
-//        @Override
-//        public void setValueInIssue(TBGIssue issue, String value) {
-//            issue.setPriority(value);
-//        }
+        
+    },
+    PRIORITY(TaskAttribute.PRIORITY, "priority", new EnumOptionProvider(TBGPriority.asArray())) {
+
+        @Override
+        public String getValueFromIssue(TBGIssue issue) {
+            return issue.getPriority();
+        }
+
+        @Override
+        public void setValueInIssue(TBGIssue issue, String value) {
+            issue.setPriority(value);
+        }
 //    },
 //    VERSION(TaskAttribute.VERSION, "Version", new BBGetListOptionProvider(new BBVersion())) {
 //
@@ -139,7 +137,6 @@ public enum TBGTaskAttributes {
         public String getValueFromIssue(TBGIssue issue) {
             return issue.getPostedBy() == null ? "" : issue.getPostedBy();
         }
-
         @Override
         public void setValueInIssue(TBGIssue issue, String value) {
             // we don't want to populate this yet.
@@ -152,7 +149,6 @@ public enum TBGTaskAttributes {
         public String getValueFromIssue(TBGIssue issue) {
             return issue.getAssignedTo() == null ? "" : issue.getAssignedTo();
         }
-
         @Override
         public void setValueInIssue(TBGIssue issue, String value) {
             // we don't want to populate this yet. 
@@ -195,7 +191,7 @@ public enum TBGTaskAttributes {
     }
 
     public abstract String getValueFromIssue(TBGIssue issue);
-
+    
     public abstract void setValueInIssue(TBGIssue issue, String value);
 
     public TaskAttributeBuilder getBuilder() {

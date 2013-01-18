@@ -27,16 +27,6 @@ public class SimpleAttributeDataMapper implements TBGIssueToTaskDataMapper {
         }   
     }
     
-    @Override
-    public void applyToTaskData(TBGIssue issue, TaskData data, TaskRepository repository) {
-        addAttributesToTaskData(data, repository);
-        for (TBGTaskAttributes bbAttr : TBGTaskAttributes.values()) {
-            TaskAttribute attr = data.getRoot().getAttribute(bbAttr.getBuilder().getAttributeId());
-            String value = bbAttr.getValueFromIssue(issue);
-            if (value != null) attr.setValue(value);
-        }
-    }
-
     /* (non-Javadoc)
      * @see org.eclipse.mylyn.bitbucket.internal.mapping.BBIssueToTaskDataMapper#applyToIssue(org.eclipse.mylyn.tasks.core.data.TaskData, org.eclipse.mylyn.bitbucket.internal.model.BBIssue)
      */
@@ -65,5 +55,15 @@ public class SimpleAttributeDataMapper implements TBGIssueToTaskDataMapper {
         TaskAttribute attr = data.getRoot().getAttribute(builder.getAttributeId());
         return attr != null ? attr.getValue() : null;
     }
+
+	@Override
+	public void applyToTaskData(TBGIssue issue, TaskData data, TaskRepository repository) {
+        addAttributesToTaskData(data, repository);
+        for (TBGTaskAttributes bbAttr : TBGTaskAttributes.values()) {
+            TaskAttribute attr = data.getRoot().getAttribute(bbAttr.getBuilder().getAttributeId());
+            String value = bbAttr.getValueFromIssue(issue);
+            if (value != null) attr.setValue(value);
+        }
+	}
 
 }

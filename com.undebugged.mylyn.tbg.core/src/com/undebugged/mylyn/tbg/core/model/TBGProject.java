@@ -4,12 +4,15 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.gson.annotations.SerializedName;
 import com.undebugged.mylyn.tbg.core.TBGRepository;
 
-public class TBGProject extends TBGObject {
+public class TBGProject extends TBGObject implements Comparable<TBGProject> {
 
 	// project_key: project_name
+	@SerializedName("key")
 	private String projectKey;
+	@SerializedName("name")
 	private String projectName;
 
 	public TBGProject(String key, String name) {
@@ -53,4 +56,15 @@ public class TBGProject extends TBGObject {
 		return null;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null || !(obj instanceof TBGProject)) return false;
+		return getProjectKey().equals(((TBGProject)obj).getProjectKey());
+	}
+
+	@Override
+	public int compareTo(TBGProject o) {
+		if (o == null || o.getProjectName() == null) return -1;
+		return getProjectName().compareTo(o.getProjectName());
+	}
 }

@@ -74,7 +74,6 @@ public class TBGService {
         return new GsonBuilder()
         		.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
                 .registerTypeAdapter(Date.class, new DateTimestampDeserializer())
-                .registerTypeAdapter(TBGProjects.class, new TBGProjects().new TBGProjectsDeserializer())
                 .create();
     }
 //    
@@ -173,6 +172,9 @@ public class TBGService {
             }
             if (statusCode == HttpStatus.SC_NOT_FOUND) {
                 throw new TBGServiceException("Could not find item, it is possible that the repositories are not in sync, please try and synchronize you repository.");
+            }
+            if (statusCode == HttpStatus.SC_INTERNAL_SERVER_ERROR) {
+                throw new TBGServiceException("Server error while performing query.");
             }
             String json = method.getResponseBodyAsString();
             return gson().fromJson(json, type);

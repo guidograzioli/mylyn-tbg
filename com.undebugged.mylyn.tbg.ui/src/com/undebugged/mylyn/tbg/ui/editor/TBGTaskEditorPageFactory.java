@@ -1,27 +1,28 @@
 package com.undebugged.mylyn.tbg.ui.editor;
 
+import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditorInput;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.forms.editor.IFormPage;
 
-public class TBGTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
+import com.undebugged.mylyn.tbg.core.TBGCorePlugin;
 
-	public TBGTaskEditorPageFactory() {
-		// TODO Auto-generated constructor stub
-	}
+public class TBGTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public boolean canCreatePageFor(TaskEditorInput input) {
-		// TODO Auto-generated method stub
+		if (input.getTask().getConnectorKind().equals(TBGCorePlugin.CONNECTOR_KIND)
+				|| TasksUiUtil.isOutgoingNewTask(input.getTask(), TBGCorePlugin.CONNECTOR_KIND)) {
+			return true;
+		}
 		return false;
 	}
 
 	@Override
 	public IFormPage createPage(TaskEditor parentEditor) {
-		// TODO Auto-generated method stub
-		return null;
+		return new TBGTaskEditorPage(parentEditor);
 	}
 
 	@Override
@@ -32,8 +33,7 @@ public class TBGTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public String getPageText() {
-		// TODO Auto-generated method stub
-		return null;
+		return "The Bug Genie";
 	}
 
 }

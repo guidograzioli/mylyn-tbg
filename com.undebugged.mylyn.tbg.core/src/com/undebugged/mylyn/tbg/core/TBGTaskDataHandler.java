@@ -44,7 +44,7 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
     public TaskData toTaskData(TaskRepository repository, TBGIssue issue) throws TBGServiceException {
         
         TaskData data = new TaskData(getAttributeMapper(repository), TBGCorePlugin.CONNECTOR_KIND,
-                repository.getRepositoryUrl(), issue.getLocalId());
+                repository.getRepositoryUrl(), issue.getId());
         data.setVersion(DATA_VERSION);
         for (TBGIssueToTaskDataMapper mapper : mappers) {
             mapper.applyToTaskData(issue, data, repository);
@@ -53,6 +53,7 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
         
         return data;
     }
+
     
     // return true if data has null value of required attribute 
     private boolean hasNullValueInRequiredAttributes(TaskData data) {

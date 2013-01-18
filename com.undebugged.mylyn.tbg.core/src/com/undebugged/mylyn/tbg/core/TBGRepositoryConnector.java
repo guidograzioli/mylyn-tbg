@@ -1,5 +1,6 @@
 package com.undebugged.mylyn.tbg.core;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -13,6 +14,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
@@ -70,6 +72,7 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 	            TBGIssue issue = TBGService.get(repository).doGet(new TBGIssue(cache.get(taskId)));
 	            monitor.worked(60);
 	            TaskData taskData = taskDataHandler.toTaskData(repository, issue);
+	            taskData.setPartial(false);
 	            return taskData;
         	}
         } catch (TBGServiceException e) {
@@ -99,8 +102,19 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public boolean hasTaskChanged(TaskRepository taskRepository, ITask task,
 			TaskData taskData) {
-		// TODO Auto-generated method stub
-		return false;
+		
+		TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
+
+		if (attrModification == null || attrModification.getValue() == null
+                || attrModification.getValue().length() > 0)
+            return false;
+        
+        // detect if any of the tasks has and old version 
+        Date lastKnownUpdated = task.getModificationDate();
+        
+        Date modified = taskData.getAttributeMapper().getDateValue(attrModification);
+        
+        return lastKnownUpdated.after(modified) || lastKnownUpdated.before(modified);
 	}
 
 	@Override
@@ -113,9 +127,10 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
             monitor.worked(60);
             // collect task data
             if (issues == null) return Status.OK_STATUS;
-            for (TBGIssue issue : issues.getIssuesList()) {
+            for (TBGIssue issue : issues.getIssues()) {
                 //addCommentsToIssue(repository,issue);
                 TaskData taskData = taskDataHandler.toTaskData(repository, issue);
+                taskData.setPartial(true);
                 collector.accept(taskData);
                 monitor.worked(40/issues.getCount());
                 cache.put(issue.getId(), query.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT)+"|"+issue.getIssueNo());
