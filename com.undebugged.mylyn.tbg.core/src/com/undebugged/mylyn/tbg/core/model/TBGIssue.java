@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.reflect.TypeToken;
 import com.undebugged.mylyn.tbg.core.TBGRepository;
 
@@ -14,6 +15,7 @@ public class TBGIssue extends TBGObject {
     private String id;
     private String title;
     private String content;
+    @SerializedName("created_at")
     private Date createdAt;
     private String status;
     private String issueNo;
@@ -52,9 +54,23 @@ public class TBGIssue extends TBGObject {
         this.status = status;
     }
 
-    
-        
-    public String getDescription() {
+	public Date getLastUpdated() {
+		return lastUpdated;
+	}
+
+	public void setLastUpdated(Date lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
+
+	public String getIssuetype() {
+		return issuetype;
+	}
+
+	public void setIssuetype(String issuetype) {
+		this.issuetype = issuetype;
+	}
+
+	public String getDescription() {
 		return description;
 	}
 
@@ -68,14 +84,6 @@ public class TBGIssue extends TBGObject {
 
 	public void setReproductionSteps(String reproductionSteps) {
 		this.reproductionSteps = reproductionSteps;
-	}
-
-	public Date getLastUpdated() {
-		return lastUpdated;
-	}
-
-	public void setLastUpdated(Date lastUpdated) {
-		this.lastUpdated = lastUpdated;
 	}
 
 	public String getAssignedTo() {
@@ -142,14 +150,6 @@ public class TBGIssue extends TBGObject {
         this.content = content;
     }
 
-    public Date getCreatedOn() {
-        return createdAt;
-    }
-
-    public void setCreatedOn(Date createdOn) {
-        this.createdAt = createdOn;
-    }
-
     public String getStatus() {
         return status;
     }
@@ -174,18 +174,10 @@ public class TBGIssue extends TBGObject {
         this.resourceUri = resourceUri;
     }
 
-    public String getIssueType() {
-		return issuetype;
-	}
-
-	public void setIssueType(String issueType) {
-		this.issuetype = issueType;
-	}
-
 	@Override
     public String toString() {
         return "TBGIssue [id=" + id + ", title=" + title + ", description=" + description + ",steps="+ reproductionSteps +
-        		", createdOn=" + createdAt + ", status=" + status + ", priority=" + priority +  
+        		", createdAt=" + createdAt + ", status=" + status + ", priority=" + priority +  
                 ", issuetype=" + issuetype + "]";
     }
     
@@ -196,7 +188,7 @@ public class TBGIssue extends TBGObject {
         params.put("content", getContent());
         params.put("status", getStatus());
         params.put("priority", getPriority());
-        params.put("issueType", getIssueType());
+        params.put("issueType", getIssuetype());
         return params;
     }
 

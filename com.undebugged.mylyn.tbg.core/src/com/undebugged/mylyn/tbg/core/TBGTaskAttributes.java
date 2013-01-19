@@ -1,5 +1,7 @@
 package com.undebugged.mylyn.tbg.core;
 
+import java.text.SimpleDateFormat;
+
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
@@ -18,7 +20,8 @@ import com.undebugged.mylyn.tbg.core.model.TBGStatus;
  *          For instance the Status Attribute should appear as a Option list in the editor page.
  */
 public enum TBGTaskAttributes {
-    STATUS(TaskAttribute.STATUS, "Status", new EnumOptionProvider(TBGStatus.asArray())) {
+	
+    STATUS(TaskAttribute.STATUS, TaskAttribute.TYPE_SHORT_TEXT,"Status", new EnumOptionProvider(TBGStatus.asArray())) {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
@@ -30,7 +33,7 @@ public enum TBGTaskAttributes {
         }
 
     },
-    TASK_KEY(TaskAttribute.TASK_KEY, "id") {
+    TASK_KEY(TaskAttribute.TASK_KEY, TaskAttribute.TYPE_LONG,"id") {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
@@ -42,7 +45,7 @@ public enum TBGTaskAttributes {
         }
 
     },
-    SUMMARY(TaskAttribute.SUMMARY, "title") {
+    SUMMARY(TaskAttribute.SUMMARY, TaskAttribute.TYPE_SHORT_TEXT,"title", BuilderFlag.IS_SMALL_EDITABLE_TEXT) {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
@@ -54,7 +57,7 @@ public enum TBGTaskAttributes {
         }
 
     },
-    DESCRIPTION(TaskAttribute.DESCRIPTION, "Content", BuilderFlag.IS_OPTIONAL,BuilderFlag.LARGE_EDITABLE_TEXT) {
+    DESCRIPTION(TaskAttribute.DESCRIPTION, TaskAttribute.TYPE_LONG_RICH_TEXT,"Description", BuilderFlag.IS_OPTIONAL,BuilderFlag.LARGE_EDITABLE_TEXT) {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
@@ -67,20 +70,20 @@ public enum TBGTaskAttributes {
         }
 
     },
-    KIND(TaskAttribute.TASK_KIND, "issuetype", new EnumOptionProvider(TBGIssueType.asArray())) {
+    KIND(TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SHORT_TEXT, "Issue Type", new EnumOptionProvider(TBGIssueType.asArray())) {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
-            return issue.getIssueType();
+            return issue.getIssuetype();
         }
         @Override
         public void setValueInIssue(TBGIssue issue, String value) {
-            issue.setIssueType(value);
+            issue.setIssuetype(value);
         }
 
         
     },
-    PRIORITY(TaskAttribute.PRIORITY, "priority", new EnumOptionProvider(TBGPriority.asArray())) {
+    PRIORITY(TaskAttribute.PRIORITY, TaskAttribute.TYPE_SINGLE_SELECT, "Priority", new EnumOptionProvider(TBGPriority.asArray())) {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
@@ -131,7 +134,30 @@ public enum TBGTaskAttributes {
 //        }
 //
     },
-    USER_REPORTER(TaskAttribute.USER_REPORTER, "Posted by") {
+    CREATED_AT(TaskAttribute.DATE_CREATION, TaskAttribute.TYPE_DATETIME, "Created on") {
+
+		@Override
+		public String getValueFromIssue(TBGIssue issue) {
+			return SimpleDateFormat.getDateInstance().format(issue.getCreatedAt());
+		}
+		@Override
+		public void setValueInIssue(TBGIssue issue, String value) {
+			//readonly
+		}
+    },
+    LAST_UPDATED(TaskAttribute.DATE_MODIFICATION, TaskAttribute.TYPE_DATETIME, "Updated on") {
+
+		@Override
+		public String getValueFromIssue(TBGIssue issue) {
+			if (issue.getLastUpdated() == null) return null;
+			return SimpleDateFormat.getDateInstance().format(issue.getLastUpdated());
+		}
+		@Override
+		public void setValueInIssue(TBGIssue issue, String value) {
+			//readonly
+		}
+    },    
+    USER_REPORTER(TaskAttribute.USER_REPORTER, TaskAttribute.TYPE_PERSON, "Posted by") {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
@@ -143,7 +169,7 @@ public enum TBGTaskAttributes {
         }
 
     },
-    USER_ASSIGNED(TaskAttribute.USER_ASSIGNED, "Assigned to") {
+    USER_ASSIGNED(TaskAttribute.USER_ASSIGNED, TaskAttribute.TYPE_PERSON, "Assigned to") {
 
         @Override
         public String getValueFromIssue(TBGIssue issue) {
@@ -164,12 +190,19 @@ public enum TBGTaskAttributes {
      *                valid values are either an OptionProvider instance (if the attribute is composed
      *                of a list of options) or any BuilderFlag.
      */
-    private TBGTaskAttributes(String id, String label, Object... flags) {
+    private TBGTaskAttributes(String id, String type, String label, Object... flags) {
+    	this.key = id;
         builder = new TaskAttributeBuilder();
         builder.withId(id).withLabel(label);
         for (Object flag : flags) {
             processFlag(flag);
         }
+    }
+    
+    private String key;
+    
+    public String getKey() {
+    	return key;
     }
 
     private void processFlag(Object flag) {

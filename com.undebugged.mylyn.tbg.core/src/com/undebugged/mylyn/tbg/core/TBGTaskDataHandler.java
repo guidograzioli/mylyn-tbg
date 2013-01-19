@@ -27,7 +27,7 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
 
     @Override
     public TaskAttributeMapper getAttributeMapper(TaskRepository taskRepository) {
-        return new TaskAttributeMapper(taskRepository);
+        return new TBGAttributeMapper(taskRepository);
     }
 
     @Override

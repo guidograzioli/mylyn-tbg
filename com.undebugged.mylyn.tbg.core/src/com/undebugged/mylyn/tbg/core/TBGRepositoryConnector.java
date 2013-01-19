@@ -105,14 +105,16 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 		
 		TaskAttribute attrModification = taskData.getRoot().getMappedAttribute(TaskAttribute.DATE_MODIFICATION);
 
-		if (attrModification == null || attrModification.getValue() == null
-                || attrModification.getValue().length() > 0)
+		if (attrModification == null || attrModification.getValue() == null)
             return false;
         
         // detect if any of the tasks has and old version 
         Date lastKnownUpdated = task.getModificationDate();
         
         Date modified = taskData.getAttributeMapper().getDateValue(attrModification);
+        
+        if (modified == null && lastKnownUpdated != null) return true;
+        if (modified == null && lastKnownUpdated == null) return false;
         
         return lastKnownUpdated.after(modified) || lastKnownUpdated.before(modified);
 	}
