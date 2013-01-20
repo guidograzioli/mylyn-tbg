@@ -15,6 +15,7 @@ public class TBGRepositorySettingsPage extends AbstractRepositorySettingsPage {
 
 	protected static final String LABEL_SECURITYKEY = "Security Key";
 	protected StringFieldEditor repositorySecurityKeyEditor;
+	private String oldSecurityKey;
 	
 	public TBGRepositorySettingsPage(TaskRepository taskRepository) {
 		super("The Bug Genie Repository Settings", "Settings for The Bug Genie Repository", taskRepository);
@@ -32,6 +33,11 @@ public class TBGRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	@Override
 	public void createControl(Composite parent) {
 		super.createControl(parent);
+		if (repository != null) {
+			oldSecurityKey = repository.getProperty(TBGCorePlugin.PROPERTY_SECURITYKEY);
+			if (oldSecurityKey != null)
+				repositorySecurityKeyEditor.setStringValue(oldSecurityKey);
+		}
 	}
 	
 	@Override
@@ -47,7 +53,7 @@ public class TBGRepositorySettingsPage extends AbstractRepositorySettingsPage {
 	 */
 	protected boolean isMissingCredentials() {
 		return repositoryUserNameEditor.getStringValue().trim().equals("") //$NON-NLS-1$
-				|| repositorySecurityKeyEditor.getStringValue().trim().equals("")
+				|| (repositorySecurityKeyEditor != null && repositorySecurityKeyEditor.getStringValue().trim().equals(""))
 				|| (getSavePassword() && repositoryPasswordEditor.getStringValue().trim().equals("")); //$NON-NLS-1$
 	}
 	
