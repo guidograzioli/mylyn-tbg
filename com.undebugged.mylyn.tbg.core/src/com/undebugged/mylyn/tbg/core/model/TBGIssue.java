@@ -1,6 +1,7 @@
 package com.undebugged.mylyn.tbg.core.model;
 
 import java.lang.reflect.Type;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -184,11 +185,16 @@ public class TBGIssue extends TBGObject {
 
     public Map<String, String> getParams() {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("title", getTitle());
-        params.put("content", getContent());
+        params.put("summary", getTitle());
+        params.put("description", getDescription());
         params.put("status", getStatus());
         params.put("priority", getPriority());
-        params.put("issueType", getIssuetype());
+        params.put("issuetype", getIssuetype());
+        params.put("reproduction_steps", getReproductionSteps());
+        params.put("posted_by", getPostedBy());
+        params.put("created_at", SimpleDateFormat.getInstance().format(getCreatedAt()));
+        params.put("last_updated", SimpleDateFormat.getInstance().format(getLastUpdated()));
+        params.put("assigned_to", getAssignedTo());
         return params;
     }
 

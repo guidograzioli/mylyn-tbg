@@ -17,10 +17,12 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
+import org.eclipse.mylyn.tasks.core.data.TaskMapper;
 import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
 import com.undebugged.mylyn.tbg.core.model.TBGIssues;
+import com.undebugged.mylyn.tbg.core.model.TBGStatus;
 
 public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 
@@ -155,8 +157,16 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository,
 			ITask task, TaskData taskData) {
-		// TODO Auto-generated method stub
 
+	  	if (!taskData.isNew()) {
+            task.setUrl(getTaskUrl(taskRepository.getUrl(), taskData.getTaskId()));
+        }
+        new TaskMapper(taskData).applyTo(task);
+        if (TBGStatus.CLOSED.toString().equalsIgnoreCase(taskData.getRoot().getMappedAttribute(TaskAttribute.STATUS).getValue())) {
+            task.setCompletionDate(new Date());
+        } else {
+            task.setCompletionDate(null);
+        }
 	}
 
 	public void stop() {

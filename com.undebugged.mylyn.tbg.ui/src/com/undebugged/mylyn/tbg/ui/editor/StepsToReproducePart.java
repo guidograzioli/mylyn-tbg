@@ -8,7 +8,7 @@ public class StepsToReproducePart extends AbstractRichTextPart {
     
     public StepsToReproducePart(boolean expandedByDefault) {
 
-        super(LABEL_SECTION_STEPS, TBGTaskAttributes., expandedByDefault);
+        super(LABEL_SECTION_STEPS, TBGTaskAttributes.STEPS_TO_REPRODUCE.getKey(), expandedByDefault);
     }
     
 }

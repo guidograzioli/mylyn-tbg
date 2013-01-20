@@ -70,6 +70,19 @@ public enum TBGTaskAttributes {
         }
 
     },
+    STEPS_TO_REPRODUCE("task.additional.steps", TaskAttribute.TYPE_LONG_RICH_TEXT,"Steps to reproduce", BuilderFlag.IS_OPTIONAL,BuilderFlag.LARGE_EDITABLE_TEXT) {
+
+        @Override
+        public String getValueFromIssue(TBGIssue issue) {
+            return issue.getReproductionSteps();
+        }
+
+        @Override
+        public void setValueInIssue(TBGIssue issue, String value) {
+            issue.setReproductionSteps(value);
+        }
+
+    },    
     KIND(TaskAttribute.TASK_KIND, TaskAttribute.TYPE_SHORT_TEXT, "Issue Type", new EnumOptionProvider(TBGIssueType.asArray())) {
 
         @Override
