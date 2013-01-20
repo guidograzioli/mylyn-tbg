@@ -30,9 +30,17 @@ public class TBGQuery {
         	if (state.equals("open") || state.equals("closed"))
         		query.append("state/").append(state).append("/");
         }
+        StringBuilder issuetype = new StringBuilder();
         for (String kind : issueTypes) {
-        	if (!kind.equals("all"))
-        		query.append("issuetype/").append(TBGObject.generateKey(kind)).append("/");
+        	if (!kind.equals("All")) {
+        		if (issuetype.length() > 0) issuetype.append(",");
+        		issuetype.append(TBGObject.generateKey(kind));
+        	} else {
+        		issuetype = new StringBuilder(); break;
+        	}
+        }
+        if (issuetype.length() > 0) {
+        	query.append("issuetype/").append(issuetype.toString()).append("/");
         }
         if (StringUtils.isNotBlank(assignee)) {
         	if (!assignee.equals("all"))

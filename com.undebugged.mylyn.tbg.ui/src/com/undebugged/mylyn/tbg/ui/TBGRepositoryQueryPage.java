@@ -132,7 +132,7 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
         
         
         IRepositoryQuery oldQuery = getQuery();
-        String[] issueTypes = TBGIssueType.asArray();
+        String[] issueTypes = TBGIssueType.asArrayForMultiSelect();
         String[] statuses = new String[] {"all", "open","closed" };
         String[] assignees = new String[] {"all", "me", "none" };
         TBGProjects projects = service.doGet(new TBGProjects());
@@ -202,7 +202,7 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
             }
         }        
         {
-            typeList = new List(group, SWT.SINGLE | SWT.BORDER | SWT.V_SCROLL);
+            typeList = new List(group, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL);
             typeList.setLayoutData(new GridData(SWT.FILL, SWT.FILL, false, false, 1, 1));
             GridDataFactory.defaultsFor(typeList).applyTo(typeList);
             typeList.setItems(issueTypes);
@@ -213,6 +213,8 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
                         typeList.select(i);
                     }
                 }
+            } else {
+                statusList.select(new int[] { 1,2 });
             }
         }
         {

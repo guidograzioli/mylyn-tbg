@@ -22,5 +22,7 @@ public enum TBGIssueType {
     public static String[] asArray() {
         return new String[]{BUG.getType(), ENHANCEMENT.getType(), PROPOSAL.getType(), TASK.getType(), USERSTORY.getType(), DOCREQ.getType()};
     }
-
+    public static String[] asArrayForMultiSelect() {
+        return new String[]{"All",BUG.getType(), ENHANCEMENT.getType(), PROPOSAL.getType(), TASK.getType(), USERSTORY.getType(), DOCREQ.getType()};
+    }
 }
