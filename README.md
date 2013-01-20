@@ -8,8 +8,8 @@ master branch currently works against [my fork](https://github.com/guidograzioli
 ##STATUS
 
 - Repository configuration and authentication (ok).
-- Query wizard (issues with task list).
-- But editor (just started, partial data).
+- Query wizard ~~(issues with task list)~~.
+- Task editor (just started, partial data).
 
 ##TODO
 
