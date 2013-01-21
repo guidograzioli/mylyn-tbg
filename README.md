@@ -8,12 +8,21 @@ master branch currently works against [my fork](https://github.com/guidograzioli
 ##STATUS
 
 - Repository configuration and authentication (ok).
-- Query wizard ~~(issues with task list)~~.
-- Task editor (just started, partial data).
+- Query wizard (ok).
+- Task editor (can view issues, create new issues, no updates or deletions).
 
 ##TODO
 
 - Load comments.
-- Support query with multiple issuetype values (both here and TBG route).
+- Support query with multiple issuetype values (done).
 - Support metadata and custom fields.
-- File attachments (make screenshot like mantis-bt connector)
+- File attachments (make screenshot like mantis-bt connector).
+- Support proxy (read and use eclipse settings, use with apache httpclient).
+
+##INSTALLATION
+
+- Clone and install [my fork](https://github.com/guidograzioli/thebuggenie) of TBG with configuration as usual.
+- Add some projects and issues.
+- Setup an eclipse PDE environment (you may want PDT and xdebug for contributing to the connector, TBG side).
+- Clone this git repo and import in eclipse as plugin projects.
+- Launch com.undebugged.mylyn.tbg.core as eclipse application.
