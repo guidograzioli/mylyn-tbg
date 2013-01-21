@@ -185,22 +185,29 @@ public class TBGIssue extends TBGObject {
 
     public Map<String, String> getParams() {
         Map<String, String> params = new HashMap<String, String>();
-        params.put("summary", getTitle());
+        params.put("title", getTitle());
         params.put("description", getDescription());
         params.put("status", getStatus());
         params.put("priority", getPriority());
+        params.put("resolution", getResolution());
         params.put("issuetype", getIssuetype());
-        params.put("reproduction_steps", getReproductionSteps());
+        if (getReproductionSteps() != null && !"".equals(getReproductionSteps()))
+        		params.put("reproduction_steps", getReproductionSteps());
         params.put("posted_by", getPostedBy());
-        params.put("created_at", SimpleDateFormat.getInstance().format(getCreatedAt()));
-        params.put("last_updated", SimpleDateFormat.getInstance().format(getLastUpdated()));
+        if (getCreatedAt() != null)
+        	params.put("created_at", SimpleDateFormat.getInstance().format(getCreatedAt()));
+        if (getLastUpdated() != null) 
+        	params.put("last_updated", SimpleDateFormat.getInstance().format(getLastUpdated()));
         params.put("assigned_to", getAssignedTo());
         return params;
     }
 
     @Override
     public String buildUrl(TBGRepository r) {
-        return r.getUrl() + "/" + getProjectKey() + "/issues/" + getIssueNo().replaceAll("[^0-9]","") + "/format/json/";
+    	if (getIssueNo() != null && !"".equals(getIssueNo().trim()))
+    		return r.getUrl() + "/" + getProjectKey() + "/issues/" + getIssueNo().replaceAll("[^0-9]","") + "/format/json/";
+    	else
+    		return r.getUrl() + "/" + getProjectKey() + "/issues/new";
     }
     
     

@@ -15,6 +15,7 @@ import com.undebugged.mylyn.tbg.core.model.TBGIssueType;
 import com.undebugged.mylyn.tbg.core.model.TBGPriority;
 import com.undebugged.mylyn.tbg.core.model.TBGProject;
 import com.undebugged.mylyn.tbg.core.model.TBGProjects;
+import com.undebugged.mylyn.tbg.core.model.TBGResolution;
 import com.undebugged.mylyn.tbg.core.model.TBGStatus;
 
 /**
@@ -137,6 +138,18 @@ public enum TBGTaskAttributes {
         public void setValueInIssue(TBGIssue issue, String value) {
             issue.setPriority(value);
         }
+      },
+      RESOLUTION(TaskAttribute.RESOLUTION, TaskAttribute.TYPE_SINGLE_SELECT, "Resolution", new EnumOptionProvider(TBGResolution.asArray())) {
+
+		@Override
+		public String getValueFromIssue(TBGIssue issue) {
+			return issue.getResolution();
+		}
+
+		@Override
+		public void setValueInIssue(TBGIssue issue, String value) {
+			issue.setResolution(value);
+		}
 //    },
 //    VERSION(TaskAttribute.VERSION, "Version", new BBGetListOptionProvider(new BBVersion())) {
 //

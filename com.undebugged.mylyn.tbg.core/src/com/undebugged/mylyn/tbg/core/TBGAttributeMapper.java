@@ -19,7 +19,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
  */
 public class TBGAttributeMapper extends TaskAttributeMapper {
     
-      public TBGAttributeMapper(TaskRepository taskRepository) {
+	public TBGAttributeMapper(TaskRepository taskRepository) {
         super(taskRepository);
     }
     
@@ -27,7 +27,7 @@ public class TBGAttributeMapper extends TaskAttributeMapper {
 
     
     {
-//TODO    	taskAttributeToTBGAttribute.put(TaskAttribute.PRODUCT, TBGTaskAttributes.PROJECT);
+        taskAttributeToTBGAttribute.put(TaskAttribute.PRODUCT, TBGTaskAttributes.PROJECT);
 //    	taskAttributeToTBGAttribute.put(TaskAttribute.COMPONENT, TBGTaskAttributes.CATEGORY);
 //    	taskAttributeToTBGAttribute.put(TaskAttribute.COMMENT_NEW, Attribute.NEW_COMMENT);
     	taskAttributeToTBGAttribute.put(TaskAttribute.DESCRIPTION, TBGTaskAttributes.DESCRIPTION);
@@ -43,7 +43,8 @@ public class TBGAttributeMapper extends TaskAttributeMapper {
     	taskAttributeToTBGAttribute.put(TaskAttribute.STATUS, TBGTaskAttributes.STATUS);
 //    	taskAttributeToTBGAttribute.put(TaskAttribute.RESOLUTION, TBGTaskAttributes.RESOLUTION);
     	taskAttributeToTBGAttribute.put(TaskAttribute.PRIORITY, TBGTaskAttributes.PRIORITY);
-//    	taskAttributeToTBGAttribute.put(TaskAttribute.TASK_KIND, TBGTaskAttributes.SEVERITY);
+    	taskAttributeToTBGAttribute.put(TaskAttribute.TASK_KIND, TBGTaskAttributes.KIND);
+    	taskAttributeToTBGAttribute.put(TaskAttribute.RESOLUTION, TBGTaskAttributes.RESOLUTION);
 //    	taskAttributeToTBGAttribute.put(TaskAttribute.VERSION, TBGTaskAttributes.VERSION);
 //    	taskAttributeToTBGAttribute.put(TaskAttribute.SEVERITY, TBGTaskAttributes.SEVERITY);
 //    	taskAttributeToTBGAttribute.put(TaskAttribute.DATE_DUE, TBGTaskAttributes.DUE_DATE);

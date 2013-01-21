@@ -84,10 +84,11 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
 //                }
             }
             ResponseKind responseKind = taskData.isNew() ? ResponseKind.TASK_CREATED : ResponseKind.TASK_UPDATED;
-            return new RepositoryResponse(responseKind, newIssue.getLocalId());
+            return new RepositoryResponse(responseKind, newIssue.getId());
         } catch (TBGServiceException e) {
             throw new CoreException(TBGConnectorStatus.newErrorStatus(e));
         } catch (NullPointerException e) {
+        	e.printStackTrace();
             throw new CoreException(TBGConnectorStatus.newErrorStatus("Error occurred during POST method", e));
         }
     }

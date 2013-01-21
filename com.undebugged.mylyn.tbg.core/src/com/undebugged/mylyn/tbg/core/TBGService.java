@@ -114,15 +114,18 @@ public class TBGService {
     
 
     public <T extends TBGObject> T doPost(T model) throws TBGServiceException {
-        String uri = model.buildUrl(repository);
+        String uri = model.buildUrl(repository) + "?XDEBUG_SESSION_START=ECLIPSE_DBGP&KEY=13587368912604";
         System.err.println("Calling uri: "  + uri);
         PostMethod method = new PostMethod(uri);
         if (!model.getParams().isEmpty()) {
             for (Entry<String, String> entry : model.getParams().entrySet()) {
-                System.err.println(entry.getKey() + ":" +  entry.getValue());
-                method.addParameter(new NameValuePair(entry.getKey(), entry.getValue()));
+            	if (entry.getValue() != null && !"".equals(entry.getValue().trim())) {
+            		System.err.println(entry.getKey() + ":" +  entry.getValue());
+            		method.addParameter(new NameValuePair(entry.getKey(), entry.getValue()));
+            	}
             }
         }
+        method.addParameter(new NameValuePair("format", "json"));
         return execute(method, credentials, model.getClass());
     }
 

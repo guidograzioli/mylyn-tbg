@@ -1,5 +1,7 @@
 package com.undebugged.mylyn.tbg.ui.editor;
 
+import org.eclipse.mylyn.commons.ui.CommonImages;
+import org.eclipse.mylyn.tasks.ui.TasksUiImages;
 import org.eclipse.mylyn.tasks.ui.TasksUiUtil;
 import org.eclipse.mylyn.tasks.ui.editors.AbstractTaskEditorPageFactory;
 import org.eclipse.mylyn.tasks.ui.editors.TaskEditor;
@@ -27,8 +29,7 @@ public class TBGTaskEditorPageFactory extends AbstractTaskEditorPageFactory {
 
 	@Override
 	public Image getPageImage() {
-		// TODO Auto-generated method stub
-		return null;
+		return CommonImages.getImage(TasksUiImages.REPOSITORY);
 	}
 
 	@Override
