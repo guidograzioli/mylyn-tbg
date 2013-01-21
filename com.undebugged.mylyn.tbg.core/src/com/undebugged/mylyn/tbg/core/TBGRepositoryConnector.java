@@ -1,7 +1,9 @@
 package com.undebugged.mylyn.tbg.core;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +16,7 @@ import org.eclipse.mylyn.tasks.core.AbstractRepositoryConnector;
 import org.eclipse.mylyn.tasks.core.IRepositoryQuery;
 import org.eclipse.mylyn.tasks.core.ITask;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
+import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 import org.eclipse.mylyn.tasks.core.data.TaskDataCollector;
@@ -22,13 +25,16 @@ import org.eclipse.mylyn.tasks.core.sync.ISynchronizationSession;
 
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
 import com.undebugged.mylyn.tbg.core.model.TBGIssues;
+import com.undebugged.mylyn.tbg.core.model.TBGProject;
+import com.undebugged.mylyn.tbg.core.model.TBGProjects;
 import com.undebugged.mylyn.tbg.core.model.TBGStatus;
 
 public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 
 	private final TBGTaskDataHandler taskDataHandler;
 	// issue ID , projectKey|issueNo
-	private final Map<String,String> cache = new HashMap<String,String>();
+	private final Map<String,String> issuesProjectCache = new HashMap<String,String>();
+	private List<TBGProject> projectsCache = new ArrayList<TBGProject>();
 	
 	public TBGRepositoryConnector() {
 		this.taskDataHandler = new TBGTaskDataHandler();
@@ -50,13 +56,18 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 	}
 	
 	@Override
+	public AbstractTaskDataHandler getTaskDataHandler() {
+		return taskDataHandler;
+	}
+
+	@Override
 	public String getConnectorKind() {
 		return TBGCorePlugin.CONNECTOR_KIND;
 	}
 
 	@Override
 	public String getLabel() {
-		return "The Bug Genie (JSON API)";
+		return "The Bug Genie (supports 3.3.x JSON API)";
 	}
 
 	@Override
@@ -70,8 +81,8 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 			IProgressMonitor monitor) throws CoreException {
 		monitor.beginTask("Querying repository ...", 100);
         try {
-        	if (cache.get(taskId) != null) { 
-	            TBGIssue issue = TBGService.get(repository).doGet(new TBGIssue(cache.get(taskId)));
+        	if (issuesProjectCache.get(taskId) != null) { 
+	            TBGIssue issue = TBGService.get(repository).doGet(new TBGIssue(issuesProjectCache.get(taskId)));
 	            monitor.worked(60);
 	            TaskData taskData = taskDataHandler.toTaskData(repository, issue);
 	            taskData.setPartial(false);
@@ -137,7 +148,7 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
                 taskData.setPartial(true);
                 collector.accept(taskData);
                 monitor.worked(40/issues.getCount());
-                cache.put(issue.getId(), query.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT)+"|"+issue.getIssueNo());
+                issuesProjectCache.put(issue.getId(), query.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT)+"|"+issue.getIssueNo());
             }
             return Status.OK_STATUS;
         } catch (TBGServiceException e) {
@@ -148,12 +159,28 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
 	}
 
 	@Override
-	public void updateRepositoryConfiguration(TaskRepository taskRepository,
-			IProgressMonitor monitor) throws CoreException {
-		// TODO Auto-generated method stub
-
+	public void updateRepositoryConfiguration(TaskRepository taskRepository, IProgressMonitor monitor) throws CoreException {
+		try {
+			TBGProjects projects = TBGService.get(taskRepository).doGet(new TBGProjects());
+			projectsCache = projects.getProjects();
+		} catch (TBGServiceException e) {
+			
+		} finally {
+            monitor.done();			
+		}
+		
 	}
 
+	@Override
+	public void updateRepositoryConfiguration(TaskRepository taskRepository, ITask task, IProgressMonitor monitor) throws CoreException {
+		
+		if ( task == null ) {
+    		updateRepositoryConfiguration(taskRepository, monitor);
+    		return;
+    	}
+		super.updateRepositoryConfiguration(taskRepository, task, monitor);
+	}
+	
 	@Override
 	public void updateTaskFromTaskData(TaskRepository taskRepository,
 			ITask task, TaskData taskData) {
@@ -167,6 +194,15 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
         } else {
             task.setCompletionDate(null);
         }
+	}
+
+	
+	public Map<String, String> getIssuesProjectCache() {
+		return issuesProjectCache;
+	}
+
+	public List<TBGProject> getProjectsCache() {
+		return projectsCache;
 	}
 
 	public void stop() {

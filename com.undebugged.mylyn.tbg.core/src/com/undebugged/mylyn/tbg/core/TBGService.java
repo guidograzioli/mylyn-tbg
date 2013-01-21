@@ -4,13 +4,16 @@ import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.Map.Entry;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpMethodBase;
 import org.apache.commons.httpclient.HttpStatus;
+import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.DeleteMethod;
 import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 import com.google.gson.FieldNamingPolicy;
@@ -94,7 +97,7 @@ public class TBGService {
 //        return execute(method, credentials, ((BBModelI) model).getListType());
 //    }
 //    
-    public <T> T doGet(TBGObject model) throws TBGServiceException {
+    public <T extends TBGObject> T doGet(T model) throws TBGServiceException {
         String uri = model.buildUrl(repository) + model.getObjectKey();
         System.err.println("Calling uri: "  + uri);
         GetMethod method = new GetMethod(uri); 
@@ -109,20 +112,20 @@ public class TBGService {
     }
 
     
-//
-//    public <T extends BBModelI> T doPost(T model) throws TBGServiceException {
-//        String uri = model.buildUrl(repository);
-//        System.err.println("Calling uri: "  + uri);
-//        PostMethod method = new PostMethod(uri);
-//        if (!model.getParams().isEmpty()) {
-//            for (Entry<String, String> entry : model.getParams().entrySet()) {
-//                System.err.println(entry.getKey() + ":" +  entry.getValue());
-//                method.addParameter(new NameValuePair(entry.getKey(), entry.getValue()));
-//            }
-//        }
-//        return execute(method, credentials, model.getClass());
-//    }
-//
+
+    public <T extends TBGObject> T doPost(T model) throws TBGServiceException {
+        String uri = model.buildUrl(repository);
+        System.err.println("Calling uri: "  + uri);
+        PostMethod method = new PostMethod(uri);
+        if (!model.getParams().isEmpty()) {
+            for (Entry<String, String> entry : model.getParams().entrySet()) {
+                System.err.println(entry.getKey() + ":" +  entry.getValue());
+                method.addParameter(new NameValuePair(entry.getKey(), entry.getValue()));
+            }
+        }
+        return execute(method, credentials, model.getClass());
+    }
+
 //    public <T extends BBModelI> T doPut(T model) throws TBGServiceException {
 //        
 //        String uri = model.buildUrl(repository) + model.getKey() + "/";
@@ -195,4 +198,10 @@ public class TBGService {
 			return new Date(time*1000);
 		}
     }
+
+	public TBGRepository getRepository() {
+		return repository;
+	}
+    
+    
 }

@@ -36,7 +36,6 @@ public class TBGIssue extends TBGObject {
     private String description;
     private String reproductionSteps;
     
-    
     public TBGIssue() {}
     
     public TBGIssue(String taskId) {
@@ -54,6 +53,7 @@ public class TBGIssue extends TBGObject {
         this.priority = priority;
         this.status = status;
     }
+
 
 	public Date getLastUpdated() {
 		return lastUpdated;

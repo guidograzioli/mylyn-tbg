@@ -135,7 +135,7 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
         String[] issueTypes = TBGIssueType.asArrayForMultiSelect();
         String[] statuses = new String[] {"all", "open","closed" };
         String[] assignees = new String[] {"all", "me", "none" };
-        TBGProjects projects = service.doGet(new TBGProjects());
+        java.util.List<TBGProject> projects = service.doGet(new TBGProjects()).getProjects();
         
 
         Composite group = new Composite(parent, SWT.NONE);
@@ -174,7 +174,7 @@ public class TBGRepositoryQueryPage extends AbstractRepositoryQueryPage {
 					return ((TBGProject)element).getProjectName();
 				}
             });
-            projectViewer.setInput(projects.getProjects());
+            projectViewer.setInput(projects);
             if (oldQuery != null) {
                 String projectValue = oldQuery.getAttribute(TBGCorePlugin.TBG_QUERY_PROJECT);
                 projectViewer.setSelection(new StructuredSelection(new TBGProject(projectValue,"")));

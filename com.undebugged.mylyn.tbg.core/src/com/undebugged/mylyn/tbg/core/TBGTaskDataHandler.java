@@ -8,6 +8,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.mylyn.tasks.core.ITaskMapping;
 import org.eclipse.mylyn.tasks.core.RepositoryResponse;
+import org.eclipse.mylyn.tasks.core.RepositoryResponse.ResponseKind;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.AbstractTaskDataHandler;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
@@ -66,30 +67,29 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
     @Override
     public RepositoryResponse postTaskData(TaskRepository repository, TaskData taskData,
             Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
-//        try {
-//            TBGIssue issue = new TBGIssue();
-//            for (BBIssueToTaskDataMapper mapper : mappers) {
-//                mapper.applyToIssue(taskData, issue);
-//            }
-//            TBGIssue newIssue = null;
-//            if (taskData.isNew()) {
-//                newIssue = TBGService.get(repository).doPost(issue);
-//            } else {
-//                // TODO handle Operation
+        try {
+            TBGIssue issue = new TBGIssue();
+            for (TBGIssueToTaskDataMapper mapper : mappers) {
+                mapper.applyToIssue(taskData, issue);
+            }
+            TBGIssue newIssue = null;
+            if (taskData.isNew()) {
+                newIssue = TBGService.get(repository).doPost(issue);
+            } else {
+//                // TODO handle update not supported Operation
 //                newIssue = TBGService.get(repository).doPut(issue);
 //                TaskAttribute newCommentAttribute = taskData.getRoot().getMappedAttribute(TaskAttribute.COMMENT_NEW);
 //                if (newCommentAttribute != null && StringUtils.isNotBlank(newCommentAttribute.getValue())) {
 //                    TBGService.get(repository).doPost(comment);
 //                }
-//            }
-//            ResponseKind responseKind = taskData.isNew() ? ResponseKind.TASK_CREATED : ResponseKind.TASK_UPDATED;
-//            return new RepositoryResponse(responseKind, newIssue.getLocalId());
-//        } catch (TBGServiceException e) {
-//            throw new CoreException(TBGStatus.newErrorStatus(e));
-//        } catch (NullPointerException e) {
-//            throw new CoreException(TBGStatus.newErrorStatus("Please check your login credentials", e));
-//        }
-    	return null;
+            }
+            ResponseKind responseKind = taskData.isNew() ? ResponseKind.TASK_CREATED : ResponseKind.TASK_UPDATED;
+            return new RepositoryResponse(responseKind, newIssue.getLocalId());
+        } catch (TBGServiceException e) {
+            throw new CoreException(TBGConnectorStatus.newErrorStatus(e));
+        } catch (NullPointerException e) {
+            throw new CoreException(TBGConnectorStatus.newErrorStatus("Error occurred during POST method", e));
+        }
     }
 
 }

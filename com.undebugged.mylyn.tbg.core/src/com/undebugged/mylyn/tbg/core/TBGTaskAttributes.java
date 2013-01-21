@@ -1,12 +1,20 @@
 package com.undebugged.mylyn.tbg.core;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
+import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
 import com.undebugged.mylyn.tbg.core.model.TBGIssueType;
 import com.undebugged.mylyn.tbg.core.model.TBGPriority;
+import com.undebugged.mylyn.tbg.core.model.TBGProject;
+import com.undebugged.mylyn.tbg.core.model.TBGProjects;
 import com.undebugged.mylyn.tbg.core.model.TBGStatus;
 
 /**
@@ -32,6 +40,28 @@ public enum TBGTaskAttributes {
             issue.setStatus(value);
         }
 
+    },
+    PROJECT(TaskAttribute.PRODUCT, TaskAttribute.TYPE_SINGLE_SELECT, "Project", new OptionProvider() {
+		@Override
+		public Set<Entry<String, String>> getOptions(TaskRepository repository) {
+			try {
+				List<TBGProject> projects = TBGService.get(repository).doGet(new TBGProjects()).getProjects();
+				Map<String,String> map = new HashMap<String,String>();
+				for (TBGProject p : projects)
+					map.put(p.getProjectKey(),p.getProjectName());
+				return map.entrySet();
+			} catch (TBGServiceException e) {}
+			return null;
+		}
+    }) {
+		@Override
+		public String getValueFromIssue(TBGIssue issue) {
+			return issue.getProjectKey();
+		}
+		@Override
+		public void setValueInIssue(TBGIssue issue, String value) {
+			issue.setProjectKey(value);
+		}
     },
     TASK_KEY(TaskAttribute.TASK_KEY, TaskAttribute.TYPE_LONG,"id") {
 
