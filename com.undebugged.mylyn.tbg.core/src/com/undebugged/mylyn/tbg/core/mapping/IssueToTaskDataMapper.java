@@ -1,11 +1,11 @@
-package com.undebugged.mylyn.tbg.core;
+package com.undebugged.mylyn.tbg.core.mapping;
 
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
 
-public interface TBGIssueToTaskDataMapper {
+public interface IssueToTaskDataMapper {
 
     /**
      * populates the provided TaskData with empty attributes - creating a new Issue Editor. 

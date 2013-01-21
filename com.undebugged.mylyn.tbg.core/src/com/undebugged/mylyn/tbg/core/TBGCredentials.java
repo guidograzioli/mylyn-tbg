@@ -5,9 +5,7 @@ import org.eclipse.mylyn.tasks.core.TaskRepository;
 
 /**
  * Credentials object for The Bug Genie.
- * <p></p>
  * @author Guido Grazioli
- * @since 0.1.0
  */
 public class TBGCredentials {
 

@@ -26,10 +26,10 @@ import com.google.gson.JsonParseException;
 import com.undebugged.mylyn.tbg.core.model.TBGIssues;
 import com.undebugged.mylyn.tbg.core.model.TBGObject;
 import com.undebugged.mylyn.tbg.core.model.TBGProjects;
+import com.undebugged.mylyn.tbg.core.util.BCrypt;
 
 /**
  * Service object to get/search/update issue in The Bug Genie.
- * @since 1.0.0
  * @author Guido Grazioli
  */
 public class TBGService {
@@ -126,7 +126,8 @@ public class TBGService {
             }
         }
         method.addParameter(new NameValuePair("format", "json"));
-        return execute(method, credentials, model.getClass());
+        T returned = execute(method, credentials, model.getClass()); 
+        return returned;
     }
 
 //    public <T extends BBModelI> T doPut(T model) throws TBGServiceException {

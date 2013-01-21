@@ -83,6 +83,7 @@ public class TBGRepositoryConnector extends AbstractRepositoryConnector {
         try {
         	if (issuesProjectCache.get(taskId) != null) { 
 	            TBGIssue issue = TBGService.get(repository).doGet(new TBGIssue(issuesProjectCache.get(taskId)));
+	            issue.setProjectKey(issuesProjectCache.get(taskId));
 	            monitor.worked(60);
 	            TaskData taskData = taskDataHandler.toTaskData(repository, issue);
 	            taskData.setPartial(false);

@@ -15,12 +15,14 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 import org.eclipse.mylyn.tasks.core.data.TaskData;
 
+import com.undebugged.mylyn.tbg.core.mapping.SimpleAttributeDataMapper;
+import com.undebugged.mylyn.tbg.core.mapping.IssueToTaskDataMapper;
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
 
 public class TBGTaskDataHandler extends AbstractTaskDataHandler {
 
     private static final String DATA_VERSION = "1";
-    private List<TBGIssueToTaskDataMapper> mappers = new ArrayList<TBGIssueToTaskDataMapper>();
+    private List<IssueToTaskDataMapper> mappers = new ArrayList<IssueToTaskDataMapper>();
  
     public TBGTaskDataHandler() {
         mappers.add(new SimpleAttributeDataMapper());
@@ -35,7 +37,7 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
     public boolean initializeTaskData(TaskRepository repository, TaskData data, ITaskMapping initializationData,
             IProgressMonitor monitor) throws CoreException {
         data.setVersion(DATA_VERSION);
-        for (TBGIssueToTaskDataMapper mapper : mappers) {
+        for (IssueToTaskDataMapper mapper : mappers) {
             mapper.addAttributesToTaskData(data, repository);
         }
         return true;
@@ -47,7 +49,7 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
         TaskData data = new TaskData(getAttributeMapper(repository), TBGCorePlugin.CONNECTOR_KIND,
                 repository.getRepositoryUrl(), issue.getId());
         data.setVersion(DATA_VERSION);
-        for (TBGIssueToTaskDataMapper mapper : mappers) {
+        for (IssueToTaskDataMapper mapper : mappers) {
             mapper.applyToTaskData(issue, data, repository);
         }
         data.setPartial(hasNullValueInRequiredAttributes(data));
@@ -58,7 +60,7 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
     
     // return true if data has null value of required attribute 
     private boolean hasNullValueInRequiredAttributes(TaskData data) {
-        for (TBGIssueToTaskDataMapper mapper : mappers) {
+        for (IssueToTaskDataMapper mapper : mappers) {
             if (!mapper.isValid(data)) return true;
         }
         return false;
@@ -69,12 +71,13 @@ public class TBGTaskDataHandler extends AbstractTaskDataHandler {
             Set<TaskAttribute> oldAttributes, IProgressMonitor monitor) throws CoreException {
         try {
             TBGIssue issue = new TBGIssue();
-            for (TBGIssueToTaskDataMapper mapper : mappers) {
+            for (IssueToTaskDataMapper mapper : mappers) {
                 mapper.applyToIssue(taskData, issue);
             }
             TBGIssue newIssue = null;
             if (taskData.isNew()) {
                 newIssue = TBGService.get(repository).doPost(issue);
+                newIssue.setProjectKey(issue.getProjectKey());
             } else {
 //                // TODO handle update not supported Operation
 //                newIssue = TBGService.get(repository).doPut(issue);

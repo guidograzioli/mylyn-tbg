@@ -10,6 +10,9 @@ import java.util.Set;
 import org.eclipse.mylyn.tasks.core.TaskRepository;
 import org.eclipse.mylyn.tasks.core.data.TaskAttribute;
 
+import com.undebugged.mylyn.tbg.core.mapping.EnumOptionProvider;
+import com.undebugged.mylyn.tbg.core.mapping.OptionProvider;
+import com.undebugged.mylyn.tbg.core.mapping.TaskAttributeBuilder;
 import com.undebugged.mylyn.tbg.core.model.TBGIssue;
 import com.undebugged.mylyn.tbg.core.model.TBGIssueType;
 import com.undebugged.mylyn.tbg.core.model.TBGPriority;

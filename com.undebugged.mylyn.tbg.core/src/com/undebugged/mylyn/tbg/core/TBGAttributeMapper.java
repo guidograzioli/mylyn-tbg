@@ -12,10 +12,7 @@ import org.eclipse.mylyn.tasks.core.data.TaskAttributeMapper;
 /**
  * Provides a mapping from Mylyn task keys to TBG issues keys.
  * 
- * @author Chris Hane 2.0
- * @author David Carver
- * 
- * @since 3.0
+ * @author Guido Grazioli
  */
 public class TBGAttributeMapper extends TaskAttributeMapper {
     
